@@ -8,7 +8,7 @@ _config_dir="$CONFIG_DIR"
 _snapshots_dir="$SNAPSHOTS"
 _t2_template_base_dir="$T2_TEMPLATE_BASE_DIR"
 
-. ${_config_dir}/build_env
+. ${_config_dir}/build.env
 
 error()
 {

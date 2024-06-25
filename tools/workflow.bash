@@ -2,14 +2,15 @@
 
 # workflow
 
-T2_TEMPLATE_BASE_DIR="$PWD/toolchain-autobuilds/config/t2"
-T2_ROOT="$PWD/t2-minimal"
-CONFIG_DIR="$PWD/toolchain-autobuilds/config"
-TOOLS_DIR="$PWD/toolchain-autobuilds/tools"
-SNAPSHOTS="$PWD/snapshots"
-PAST_BUILDS="$PWD/past-builds"
-
-export T2_TEMPLATE_BASE_DIR T2_ROOT CONFIG_DIR TOOLS_DIR SNAPSHOTS PAST_BUILDS
+# Only for local operation
+#T2_TEMPLATE_BASE_DIR="$PWD/toolchain-autobuilds/config/t2"
+#T2_ROOT="$PWD/t2-minimal"
+#CONFIG_DIR="$PWD/toolchain-autobuilds/config"
+#TOOLS_DIR="$PWD/toolchain-autobuilds/tools"
+#SNAPSHOTS="$PWD/snapshots"
+#PAST_BUILDS="$PWD/past-builds"
+#
+#export T2_TEMPLATE_BASE_DIR T2_ROOT CONFIG_DIR TOOLS_DIR SNAPSHOTS PAST_BUILDS
 
 # prepare snapshots if any new are available
 NEW_SNAPSHOTS=0
@@ -28,7 +29,7 @@ for _url_file in ${CONFIG_DIR}/*url; do
 	if [[ $? -eq 0 ]]; then
 
 		echo "found"
-	
+
 		NEW_SNAPSHOTS=1
 
 		echo -n "I: Now downloading new snapshot from \`"$_snapshot_url"'... "
@@ -41,7 +42,7 @@ for _url_file in ${CONFIG_DIR}/*url; do
 		echo "OK"
 	else
 		echo "not found, ignoring package \`${_package}'"
-	fi	
+	fi
 done
 
 # prepare build environment

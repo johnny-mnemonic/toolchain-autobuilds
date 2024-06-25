@@ -4,7 +4,7 @@
 
 # points to worktree with hashes of already built tool snapshots
 #
-# $BUILDS/<TOOL>/<HASH> contains the URL to the actual snapshot file
+# past-builds/<PACKAGE>/<HASH>
 _past_builds_worktree="$PAST_BUILDS"
 
 _snapshots_dir="$SNAPSHOTS"
