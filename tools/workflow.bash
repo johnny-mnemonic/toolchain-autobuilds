@@ -64,7 +64,7 @@ echo "OK"
 
 # perform builds
 echo "I: performing build... "
-sudo exec-in-chroot.bash "$T2_ROOT" "/perform-build.bash" || exit 1
+sudo ${TOOLS_DIR}/exec-in-chroot.bash "$T2_ROOT" "/perform-build.bash" || exit 1
 echo "OK"
 
 exit
