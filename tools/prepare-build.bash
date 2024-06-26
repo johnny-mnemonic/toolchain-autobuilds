@@ -82,4 +82,7 @@ cp "${_tools_dir}/perform-build.bash" "${_env_dest}/" || exit 1
 # make sure the scripts are executable
 chmod +x ${_env_dest}/{perform-build.bash,build-order.bash} || exit 1
 
+# also echo build order for other tools to be able to use it
+echo "${_build_order}"
+
 exit

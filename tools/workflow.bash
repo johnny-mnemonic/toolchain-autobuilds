@@ -59,12 +59,22 @@ fi
 
 # create build order
 echo -n "I: creating build order... "
-prepare-build.bash || exit 1
+_build_order=$( prepare-build.bash ) || exit 1
 echo "OK"
 
 # perform builds
 echo "I: performing build... "
 sudo ${TOOLS_DIR}/exec-in-chroot.bash "$T2_ROOT" "/perform-build.bash" || exit 1
 echo "OK"
+
+if [[ ! -e ${BUILD_LOGS} ]]; then
+
+	mkdir -p ${BUILD_LOGS}
+fi
+_target_env_log_dir=$( echo ${T2_ROOT}/usr/src/t2-src/build/*/var/adm/logs )
+for _build in ${_build_order}; do
+
+	cp ${_target_env_log_dir}/${_build}* ${BUILD_LOGS}/
+done
 
 exit
