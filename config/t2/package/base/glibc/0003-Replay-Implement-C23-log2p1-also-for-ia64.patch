@@ -1,7 +1,7 @@
-From 30083522da05b07d24a3e0ecb66857a0f3dbbd2e Mon Sep 17 00:00:00 2001
+From fd25834d1a3c5c87ee4428065a416f9a28ffd24f Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sun, 23 Jun 2024 21:31:55 +0200
-Subject: [PATCH 3/9] Replay "Implement C23 log2p1" also for ia64
+Subject: [PATCH 3/8] Replay "Implement C23 log2p1" also for ia64
 
 See 79c52daf4740b00bef43e4f5a4281b3480459b38 for reference.
 ---
