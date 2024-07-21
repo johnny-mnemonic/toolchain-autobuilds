@@ -1,5 +1,7 @@
 # Toolchain autobuilds #
 
+[![make-sandwich](https://github.com/johnny-mnemonic/toolchain-autobuilds/actions/workflows/make-sandwich.yml/badge.svg)](https://github.com/johnny-mnemonic/toolchain-autobuilds/actions/workflows/make-sandwich.yml)
+
 Build-test ia64 toolchain parts:
 
 * binutils
