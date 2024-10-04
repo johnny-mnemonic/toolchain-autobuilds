@@ -1,7 +1,7 @@
-From 38bc8ec1778ed2d67920d4a0d6a0f2c72b78ed4a Mon Sep 17 00:00:00 2001
+From 09fbbd63272876a1fd205b6143ecf235d7c726ed Mon Sep 17 00:00:00 2001
 From: Tomas Glozar <tglozar@gmail.com>
 Date: Tue, 17 Oct 2023 20:27:53 +0200
-Subject: [PATCH 9/9] Partial math FPU error fix for ia64
+Subject: [PATCH 2/2] Partial math FPU error fix for ia64
 
 --- T2-COPYRIGHT-NOTE-BEGIN ---
 T2 SDE: package/*/glibc/math-fpu-error-partial-fix.patch.ia64
