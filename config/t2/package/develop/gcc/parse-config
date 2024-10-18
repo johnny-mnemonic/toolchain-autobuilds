@@ -26,9 +26,6 @@ fi
 	var_append GCC_WRAPPER_INSERT ' ' '-ftrivial-auto-var-init=zero' ;;
 esac
 
-# ia64 was obsolete before gcc-14 release
-[ "$arch" = "ia64" ] && var_append extraconfopt ' ' '--enable-obsolete'
-
 # It's usually better to not change the kernel optimization too drastically.
 #
 atstage toolchain &&
