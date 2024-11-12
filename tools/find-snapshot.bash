@@ -21,34 +21,38 @@ _url_file_name=$( basename "$_url_file" )
 
 _package=${_url_file_name%%-*}
 
-read _url < "$_url_file"
+while read _url; do
 
-_base_url=$( dirname ${_url} )
+	_base_url=$( dirname ${_url} )
 
-_exit_code=0
+	_exit_code=0
 
-read _snapshot_sha512 _snapshot_filename <<-EOM
-$( wget "$_url" -O - 2>/dev/null | grep ${_package} )
-EOM
+	read _snapshot_sha512 _snapshot_filename <<-EOM
+	$( wget "$_url" -O - 2>/dev/null | grep ${_package} )
+	EOM
 
-if [[ "$_snapshot_sha512" == "" || \
-      "$_snapshot_filename" == "" ]]; then
+	if [[ "$_snapshot_sha512" == "" || \
+	      "$_snapshot_filename" == "" ]]; then
 
-	# something went wrong, so exit early
-	echo "E: either hash or filename empty. Cannot continue." 1>&2
-	exit 2
-fi
+		# something went wrong, so try next URL - if available
+		echo "E: either hash or filename empty. Trying another URL - if available." 1>&2
+		_exit_code=2
+		continue
+	fi
 
-if [[ -e "${_past_builds_worktree}/${_package}/${_snapshot_sha512}" ]]; then
+	if [[ -e "${_past_builds_worktree}/${_package}/${_snapshot_sha512}" ]]; then
 
-	# already built, ignore
-	_exit_code=1
-else
-	# new snapshot found
-	mkdir -p "${_snapshots_dir}"
-	echo "${_snapshot_sha512} ${_snapshot_filename}" > "${_snapshots_dir}/${_snapshot_filename}.SHA512"
+		# already built, ignore
+		_exit_code=1
+		continue
+	else
+		# new snapshot found
+		mkdir -p "${_snapshots_dir}"
+		echo "${_snapshot_sha512} ${_snapshot_filename}" > "${_snapshots_dir}/${_snapshot_filename}.SHA512"
 
-	echo "${_base_url}/${_snapshot_filename}"
-fi
+		echo "${_base_url}/${_snapshot_filename}"
+		break
+	fi
+done < "$_url_file"
 
 exit ${_exit_code}
