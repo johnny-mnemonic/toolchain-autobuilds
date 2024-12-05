@@ -1,7 +1,7 @@
-From f2d4c23fc7bbf6f3b530f2139bc8ae70f8fac328 Mon Sep 17 00:00:00 2001
+From f7b02d54fca9a55ae6d13530c60a2720b6544b92 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Thu, 3 Oct 2024 19:34:09 +0200
-Subject: [PATCH 1/2] ia64: Qualify 'u' and 'bits' with '__' prefix
+Subject: [PATCH 09/12] ia64: Qualify 'u' and 'bits' with '__' prefix
 
 ---
  sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h | 4 ++--
