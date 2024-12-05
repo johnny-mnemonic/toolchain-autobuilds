@@ -1,7 +1,7 @@
 From 9660d1922e2df51533ddd58ac97f31cb59e68e20 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sun, 23 Jun 2024 21:36:17 +0200
-Subject: [PATCH 06/12] Replay "Implement C23 exp2m1, exp10m1" also for ia64
+Subject: [PATCH 06/13] Replay "Implement C23 exp2m1, exp10m1" also for ia64
 
 See 7ec903e028271d029818378fd60ddaf6b76b89ac for reference.
 ---
