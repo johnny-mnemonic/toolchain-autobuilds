@@ -1,7 +1,7 @@
-From 298605475cf893289effdee084cc68fcf1f92459 Mon Sep 17 00:00:00 2001
+From 61c18a23b96472aadb727baa1b881b80f8abacce Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Thu, 5 Dec 2024 23:38:20 +0100
-Subject: [PATCH 12/13] Fix build after
+Subject: [PATCH 12/20] Fix build after
  0ae0af68d8fa3bf6cbe1e4f1de5929ff71de67b3
 
 Fixes #3.
