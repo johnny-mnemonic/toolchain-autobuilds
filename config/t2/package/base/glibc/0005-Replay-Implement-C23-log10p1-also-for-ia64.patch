@@ -1,7 +1,7 @@
-From 4610d780cda2443ec18774a0f41f5c495e6454b8 Mon Sep 17 00:00:00 2001
+From 464feef9688d880e42c570c04fa18e87da000608 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sun, 23 Jun 2024 21:34:06 +0200
-Subject: [PATCH 05/20] Replay "Implement C23 log10p1" also for ia64
+Subject: [PATCH 05/21] Replay "Implement C23 log10p1" also for ia64
 
 See 55eb99e9a9d840ba452b128be14d6529c2dde039 for reference.
 ---

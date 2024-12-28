@@ -1,7 +1,7 @@
-From c6cb708af9523a20a53341e8aced37330bec655e Mon Sep 17 00:00:00 2001
+From 892c9c61feda827a7317c14127be75365e80905e Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Thu, 5 Dec 2024 21:32:16 +0100
-Subject: [PATCH 10/20] Replay "Implement C23 cospi" also for ia64
+Subject: [PATCH 10/21] Replay "Implement C23 cospi" also for ia64
 
 See 0ae0af68d8fa3bf6cbe1e4f1de5929ff71de67b3 for reference.
 ---
