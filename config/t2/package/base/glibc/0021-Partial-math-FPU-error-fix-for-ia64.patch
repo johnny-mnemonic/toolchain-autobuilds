@@ -1,4 +1,4 @@
-From 7e5cd679d8fec15ca156139d0832ad7641c330b7 Mon Sep 17 00:00:00 2001
+From 40e57a22091c9b6235be50f021b51d0debac87ba Mon Sep 17 00:00:00 2001
 From: Tomas Glozar <tglozar@gmail.com>
 Date: Tue, 17 Oct 2023 20:27:53 +0200
 Subject: [PATCH 21/21] Partial math FPU error fix for ia64

@@ -1,4 +1,4 @@
-From b398ab02d192f8ade33afac847bff47859ffeb8f Mon Sep 17 00:00:00 2001
+From ed8d78b64205bdedd9dc5e4337e0ad815fc2eebf Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 11 Dec 2024 23:00:42 +0100
 Subject: [PATCH 16/21] Replay "Implement C23 asinpi" also for ia64
