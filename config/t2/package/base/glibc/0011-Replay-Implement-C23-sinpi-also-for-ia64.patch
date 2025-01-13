@@ -1,7 +1,7 @@
-From da5162a71032295f8350f91e2d8aceb3824e6a81 Mon Sep 17 00:00:00 2001
+From c9a4142d9e542c9edb8389014ce09d789da8eed1 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Thu, 5 Dec 2024 21:34:16 +0100
-Subject: [PATCH 11/21] Replay "Implement C23 sinpi" also for ia64
+Subject: [PATCH 11/25] Replay "Implement C23 sinpi" also for ia64
 
 See 776938e8b8dcf2b59998979e91cc0f9db7d771a8 for reference.
 ---

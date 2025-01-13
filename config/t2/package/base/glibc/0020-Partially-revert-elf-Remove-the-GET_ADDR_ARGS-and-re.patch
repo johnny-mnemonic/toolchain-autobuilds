@@ -1,7 +1,7 @@
-From 4b5c3b3de53b138cc509d58d47148917013fead4 Mon Sep 17 00:00:00 2001
+From e037b3aff157f100a03eb733333203f64f962487 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 28 Dec 2024 00:21:46 +0100
-Subject: [PATCH 20/21] Partially revert "elf: Remove the GET_ADDR_ARGS and
+Subject: [PATCH 20/25] Partially revert "elf: Remove the GET_ADDR_ARGS and
  related macros [...]"
 
 This partially reverts commit 5e249192cac7354af02a7347a0d8c984e0c88ed3.
@@ -12,10 +12,10 @@ Fixes #7 for now.
  1 file changed, 25 insertions(+), 1 deletion(-)
 
 diff --git a/elf/dl-tls.c b/elf/dl-tls.c
-index c2d17265fb..eb21f1521b 100644
+index 45ea0588c3..425850efb5 100644
 --- a/elf/dl-tls.c
 +++ b/elf/dl-tls.c
-@@ -695,6 +695,23 @@ rtld_hidden_def (_dl_deallocate_tls)
+@@ -767,6 +767,23 @@ rtld_hidden_def (_dl_deallocate_tls)
  
  
  #ifdef SHARED
@@ -39,7 +39,7 @@ index c2d17265fb..eb21f1521b 100644
  
  /* Allocate one DTV entry.  */
  static struct dtv_pointer
-@@ -890,6 +907,7 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
+@@ -962,6 +979,7 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
    return the_map;
  }
  
@@ -47,7 +47,7 @@ index c2d17265fb..eb21f1521b 100644
  /* Adjust the TLS variable pointer using the TLS descriptor offset and
     the ABI-specific offset.  */
  static inline void *
-@@ -978,6 +996,7 @@ update_get_addr (tls_index *ti, size_t gen)
+@@ -1050,6 +1068,7 @@ update_get_addr (tls_index *ti, size_t gen)
  
    return tls_get_addr_adjust (p, ti);
  }
@@ -55,7 +55,7 @@ index c2d17265fb..eb21f1521b 100644
  
  /* For all machines that have a non-macro version of __tls_get_addr, we
     want to use rtld_hidden_proto/rtld_hidden_def in order to call the
-@@ -985,13 +1004,14 @@ update_get_addr (tls_index *ti, size_t gen)
+@@ -1057,13 +1076,14 @@ update_get_addr (tls_index *ti, size_t gen)
     in ld.so for __tls_get_addr.  */
  
  #ifndef __tls_get_addr
@@ -71,7 +71,7 @@ index c2d17265fb..eb21f1521b 100644
  void *
  __tls_get_addr (tls_index *ti)
  {
-@@ -1029,6 +1049,10 @@ __tls_get_addr (tls_index *ti)
+@@ -1101,6 +1121,10 @@ __tls_get_addr (tls_index *ti)
  
    return tls_get_addr_adjust (p, ti);
  }

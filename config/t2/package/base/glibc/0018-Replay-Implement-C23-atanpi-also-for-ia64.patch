@@ -1,7 +1,7 @@
-From 78f160c359f768eb1d0857401ec3661c7f86042f Mon Sep 17 00:00:00 2001
+From 0157a9aa5fc7ada8b032f0d56af8eb4a8ade9272 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Thu, 12 Dec 2024 00:52:00 +0100
-Subject: [PATCH 18/21] Replay "Implement C23 atanpi" also for ia64
+Subject: [PATCH 18/25] Replay "Implement C23 atanpi" also for ia64
 
 See ffe79c446ced76d7c1a77804ff2cc32eccbc7c7e for reference.
 ---
