@@ -8,9 +8,9 @@
 #CONFIG_DIR="$PWD/toolchain-autobuilds/config"
 #TOOLS_DIR="$PWD/toolchain-autobuilds/tools"
 #SNAPSHOTS="$PWD/snapshots"
-#PAST_BUILDS="$PWD/past-builds"
+#BUILD_LOGS="$PWD/build-logs"
 #
-#export T2_TEMPLATE_BASE_DIR T2_ROOT CONFIG_DIR TOOLS_DIR SNAPSHOTS PAST_BUILDS
+#export T2_TEMPLATE_BASE_DIR T2_ROOT CONFIG_DIR TOOLS_DIR SNAPSHOTS PAST_BUILDS BUILD_LOGS
 
 # prepare snapshots if any new are available
 NEW_SNAPSHOTS=0
@@ -77,4 +77,11 @@ for _build in ${_build_order}; do
 	cp ${_target_env_log_dir}/${_build}* ${BUILD_LOGS}/
 done
 
-exit
+# check for build failure marker
+if [[ -e ${T2_ROOT}/BUILD_FAILED ]]; then
+
+	echo "E: Build failed for at least one build job. Please examine."
+	exit 1
+else
+	exit 0
+fi
