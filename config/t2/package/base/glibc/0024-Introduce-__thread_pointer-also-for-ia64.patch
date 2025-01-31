@@ -1,4 +1,4 @@
-From 3baef99ce6a5ed95618a3507cf392318a8a44754 Mon Sep 17 00:00:00 2001
+From c65063e362b0a04723d6a9f86ae02070e00d8844 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sun, 12 Jan 2025 21:30:13 +0100
 Subject: [PATCH 24/25] Introduce __thread_pointer() also for ia64
