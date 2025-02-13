@@ -1,4 +1,4 @@
-From 9999f6e0db85ca88dd4cec3d51488eb3db906daf Mon Sep 17 00:00:00 2001
+From de1edfcbda1fb20eb542b31d3974d0153a08ea0a Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Thu, 23 May 2024 16:35:52 +0200
 Subject: [PATCH 02/25] Replay "Refer to C23 in place of C2X in glibc" also for

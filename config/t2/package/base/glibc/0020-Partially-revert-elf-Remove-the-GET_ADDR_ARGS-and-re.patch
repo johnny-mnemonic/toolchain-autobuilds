@@ -1,4 +1,4 @@
-From 10f64bbfe9a836ffdd2098cd5e2a1a4a61f7f63c Mon Sep 17 00:00:00 2001
+From d1a25b15378b196aa6d7f4ea2f30d74ec9edb5eb Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 28 Dec 2024 00:21:46 +0100
 Subject: [PATCH 20/25] Partially revert "elf: Remove the GET_ADDR_ARGS and
@@ -12,10 +12,10 @@ Fixes #7 for now.
  1 file changed, 25 insertions(+), 1 deletion(-)
 
 diff --git a/elf/dl-tls.c b/elf/dl-tls.c
-index 8306a39e8d..8a2506bd10 100644
+index 5178d9b66a..94d6fab881 100644
 --- a/elf/dl-tls.c
 +++ b/elf/dl-tls.c
-@@ -727,6 +727,23 @@ rtld_hidden_def (_dl_deallocate_tls)
+@@ -733,6 +733,23 @@ rtld_hidden_def (_dl_deallocate_tls)
  
  
  #ifdef SHARED
@@ -39,7 +39,7 @@ index 8306a39e8d..8a2506bd10 100644
  
  /* Allocate one DTV entry.  */
  static struct dtv_pointer
-@@ -922,6 +939,7 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
+@@ -928,6 +945,7 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
    return the_map;
  }
  
@@ -47,7 +47,7 @@ index 8306a39e8d..8a2506bd10 100644
  /* Adjust the TLS variable pointer using the TLS descriptor offset and
     the ABI-specific offset.  */
  static inline void *
-@@ -1010,6 +1028,7 @@ update_get_addr (tls_index *ti, size_t gen)
+@@ -1016,6 +1034,7 @@ update_get_addr (tls_index *ti, size_t gen)
  
    return tls_get_addr_adjust (p, ti);
  }
@@ -55,7 +55,7 @@ index 8306a39e8d..8a2506bd10 100644
  
  /* For all machines that have a non-macro version of __tls_get_addr, we
     want to use rtld_hidden_proto/rtld_hidden_def in order to call the
-@@ -1017,13 +1036,14 @@ update_get_addr (tls_index *ti, size_t gen)
+@@ -1023,13 +1042,14 @@ update_get_addr (tls_index *ti, size_t gen)
     in ld.so for __tls_get_addr.  */
  
  #ifndef __tls_get_addr
@@ -71,7 +71,7 @@ index 8306a39e8d..8a2506bd10 100644
  void *
  __tls_get_addr (tls_index *ti)
  {
-@@ -1061,6 +1081,10 @@ __tls_get_addr (tls_index *ti)
+@@ -1067,6 +1087,10 @@ __tls_get_addr (tls_index *ti)
  
    return tls_get_addr_adjust (p, ti);
  }
