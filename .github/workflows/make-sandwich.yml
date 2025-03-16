@@ -36,10 +36,10 @@ jobs:
           BUILD_LOGS="${BASE_DIR}/build-logs"
           export TOOLS_DIR CONFIG_DIR PAST_BUILDS SNAPSHOTS T2_TEMPLATE_BASE_DIR T2_ROOT BUILD_LOGS
           PATH=${TOOLS_DIR}:${PATH}
-          # run build ##########################################################
-          workflow.bash
           # exports ############################################################
           echo "BUILD_LOGS=${BUILD_LOGS}" >> $GITHUB_ENV
+          # run build ##########################################################
+          workflow.bash
 
       - if: '!cancelled()'
         uses: actions/upload-artifact@v4
