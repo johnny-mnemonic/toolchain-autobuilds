@@ -1,7 +1,7 @@
-From 313ead251784a12579f3f65b998f4b2d6753976f Mon Sep 17 00:00:00 2001
+From 2ef16ded9ee4b02befe02412db7f5b32075039cc Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 12 Mar 2025 22:40:10 +0100
-Subject: [PATCH 26/28] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
+Subject: [PATCH 26/29] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
  out of GL"
 
 This reverts commit ef5823d955dd7e6b4ffed9f3a8455d131cd7a737.
@@ -18,7 +18,7 @@ Unbreaks `ld.so` on ia64.
  4 files changed, 75 insertions(+), 75 deletions(-)
 
 diff --git a/elf/dl-load.c b/elf/dl-load.c
-index 6b7e9799f3..f13848a8cd 100644
+index bf29ec725d..ecfe905aec 100644
 --- a/elf/dl-load.c
 +++ b/elf/dl-load.c
 @@ -756,7 +756,7 @@ _dl_init_paths (const char *llp, const char *source,
@@ -60,10 +60,10 @@ index 6b7e9799f3..f13848a8cd 100644
  		  );
  
 diff --git a/elf/rtld.c b/elf/rtld.c
-index 00b25c1a73..75af3e15c1 100644
+index 3af8ee63c3..0717007944 100644
 --- a/elf/rtld.c
 +++ b/elf/rtld.c
-@@ -379,8 +379,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
+@@ -380,8 +380,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
  extern struct rtld_global_ro _rtld_local_ro
      __attribute__ ((alias ("_rtld_global_ro"), visibility ("hidden")));
  
@@ -72,7 +72,7 @@ index 00b25c1a73..75af3e15c1 100644
  
  static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
  		     ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv);
-@@ -467,21 +465,22 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
+@@ -468,21 +466,22 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
  
    /* Transfer data about ourselves to the permanent link_map structure.  */
  #ifndef DONT_USE_BOOTSTRAP_MAP
@@ -106,7 +106,7 @@ index 00b25c1a73..75af3e15c1 100644
  # endif
  #endif
  
-@@ -508,7 +507,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
+@@ -509,7 +508,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
  }
  
  #ifdef DONT_USE_BOOTSTRAP_MAP
@@ -115,7 +115,7 @@ index 00b25c1a73..75af3e15c1 100644
  #else
  # define bootstrap_map info.l
  #endif
-@@ -1016,8 +1015,8 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d);
+@@ -1017,8 +1016,8 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d);
  
    /* The dynamic linker link map is statically allocated, so the
       cookie in _dl_new_object has not happened.  */
@@ -126,7 +126,7 @@ index 00b25c1a73..75af3e15c1 100644
  
    ++GLRO(dl_naudit);
  
-@@ -1044,7 +1043,7 @@ load_audit_modules (struct link_map *main_map, struct audit_list *audit_list)
+@@ -1045,7 +1044,7 @@ load_audit_modules (struct link_map *main_map, struct audit_list *audit_list)
    if (GLRO(dl_naudit) > 0)
      {
        _dl_audit_objopen (main_map, LM_ID_BASE);
@@ -135,7 +135,7 @@ index 00b25c1a73..75af3e15c1 100644
      }
  }
  
-@@ -1054,7 +1053,7 @@ static void
+@@ -1055,7 +1054,7 @@ static void
  rtld_chain_load (struct link_map *main_map, char *argv0)
  {
    /* The dynamic loader run against itself.  */
@@ -144,7 +144,7 @@ index 00b25c1a73..75af3e15c1 100644
    if (l_soname (main_map) != NULL
        && strcmp (rtld_soname, l_soname (main_map)) == 0)
      _dl_fatal_printf ("%s: loader cannot load itself\n", rtld_soname);
-@@ -1141,7 +1140,7 @@ rtld_setup_main_map (struct link_map *main_map)
+@@ -1142,7 +1141,7 @@ rtld_setup_main_map (struct link_map *main_map)
  	_dl_rtld_libname.name = ((const char *) main_map->l_addr
  				 + ph->p_vaddr);
  	/* _dl_rtld_libname.next = NULL;	Already zero.  */
@@ -153,7 +153,7 @@ index 00b25c1a73..75af3e15c1 100644
  
  	has_interp = true;
  	break;
-@@ -1223,16 +1222,16 @@ rtld_setup_main_map (struct link_map *main_map)
+@@ -1224,16 +1223,16 @@ rtld_setup_main_map (struct link_map *main_map)
        = (char *) main_map->l_tls_initimage + main_map->l_addr;
    if (! main_map->l_map_end)
      main_map->l_map_end = ~0;
@@ -174,7 +174,7 @@ index 00b25c1a73..75af3e15c1 100644
  
    return has_interp;
  }
-@@ -1344,7 +1343,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1345,7 +1344,7 @@ dl_main (const ElfW(Phdr) *phdr,
        char **orig_argv = _dl_argv;
  
        /* Note the place where the dynamic linker actually came from.  */
@@ -183,7 +183,7 @@ index 00b25c1a73..75af3e15c1 100644
  
        while (_dl_argc > 1)
  	if (! strcmp (_dl_argv[1], "--list"))
-@@ -1628,22 +1627,22 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1629,22 +1628,22 @@ dl_main (const ElfW(Phdr) *phdr,
    /* If the current libname is different from the SONAME, add the
       latter as well.  */
    {
@@ -211,7 +211,7 @@ index 00b25c1a73..75af3e15c1 100644
  
    if (! rtld_is_main)
      {
-@@ -1673,7 +1672,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1674,7 +1673,7 @@ dl_main (const ElfW(Phdr) *phdr,
        _exit (has_interp ? 0 : 2);
      }
  
@@ -220,7 +220,7 @@ index 00b25c1a73..75af3e15c1 100644
    /* Set up the data structures for the system-supplied DSO early,
       so they can influence _dl_init_paths.  */
    setup_vdso (main_map, &first_preload);
-@@ -1686,20 +1685,20 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1687,20 +1686,20 @@ dl_main (const ElfW(Phdr) *phdr,
    call_init_paths (&state);
  
    /* Initialize _r_debug_extended.  */
@@ -247,7 +247,7 @@ index 00b25c1a73..75af3e15c1 100644
    ++GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
    ++GL(dl_load_adds);
  
-@@ -1717,8 +1716,8 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1718,8 +1717,8 @@ dl_main (const ElfW(Phdr) *phdr,
  
    const ElfW(Phdr) *rtld_phdr = (const void *) rtld_ehdr + rtld_ehdr->e_phoff;
  
@@ -258,7 +258,7 @@ index 00b25c1a73..75af3e15c1 100644
  
  
    /* PT_GNU_RELRO is usually the last phdr.  */
-@@ -1726,15 +1725,15 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1727,15 +1726,15 @@ dl_main (const ElfW(Phdr) *phdr,
    while (cnt-- > 0)
      if (rtld_phdr[cnt].p_type == PT_GNU_RELRO)
        {
@@ -278,7 +278,7 @@ index 00b25c1a73..75af3e15c1 100644
  
    audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_AUDIT);
    audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_DEPAUDIT);
-@@ -1928,9 +1927,9 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1929,9 +1928,9 @@ dl_main (const ElfW(Phdr) *phdr,
      main_map->l_searchlist.r_list[--i]->l_global = 1;
  
    /* Remove _dl_rtld_map from the chain.  */
@@ -291,7 +291,7 @@ index 00b25c1a73..75af3e15c1 100644
  
    for (i = 1; i < main_map->l_searchlist.r_nlist; ++i)
      if (is_rtld_link_map (main_map->l_searchlist.r_list[i]))
-@@ -1940,17 +1939,17 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1941,17 +1940,17 @@ dl_main (const ElfW(Phdr) *phdr,
       symbol search order because gdb uses the chain's order as its
       symbol search order.  */
  
@@ -314,7 +314,7 @@ index 00b25c1a73..75af3e15c1 100644
  #endif
      }
    else
-@@ -1959,14 +1958,14 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1960,14 +1959,14 @@ dl_main (const ElfW(Phdr) *phdr,
         In this case it doesn't matter much where we put the
         interpreter object, so we just initialize the list pointer so
         that the assertion below holds.  */
@@ -335,7 +335,7 @@ index 00b25c1a73..75af3e15c1 100644
      }
  
    /* Now let us see whether all libraries are available in the
-@@ -2108,7 +2107,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -2109,7 +2108,7 @@ dl_main (const ElfW(Phdr) *phdr,
  	      while (i-- > 0)
  		{
  		  struct link_map *l = main_map->l_initfini[i];
@@ -344,7 +344,7 @@ index 00b25c1a73..75af3e15c1 100644
  		    {
  		      args.l = l;
  		      _dl_receive_error (print_unresolved, relocate_doit,
-@@ -2307,7 +2306,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -2308,7 +2307,7 @@ dl_main (const ElfW(Phdr) *phdr,
      {
        RTLD_TIMING_VAR (start);
        rtld_timer_start (&start);
@@ -353,7 +353,7 @@ index 00b25c1a73..75af3e15c1 100644
        rtld_timer_accum (&relocate_time, start);
  
        __rtld_mutex_init ();
-@@ -2315,7 +2314,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -2316,7 +2315,7 @@ dl_main (const ElfW(Phdr) *phdr,
      }
  
    /* All ld.so initialization is complete.  Apply RELRO.  */
@@ -378,10 +378,10 @@ index 935d9e3baf..8347e3355b 100644
  # else
        GL(dl_nns) = 1;
 diff --git a/sysdeps/generic/ldsodefs.h b/sysdeps/generic/ldsodefs.h
-index 19494b82ee..3ea66b2a16 100644
+index fc4a3de767..44bc77047f 100644
 --- a/sysdeps/generic/ldsodefs.h
 +++ b/sysdeps/generic/ldsodefs.h
-@@ -404,6 +404,14 @@ struct rtld_global
+@@ -410,6 +410,14 @@ struct rtld_global
    /* List of search directories.  */
    EXTERN struct r_search_path_elem *_dl_all_dirs;
  
@@ -396,7 +396,7 @@ index 19494b82ee..3ea66b2a16 100644
    /* Get architecture specific definitions.  */
  #define PROCINFO_DECL
  #ifndef PROCINFO_CLASS
-@@ -1330,18 +1338,11 @@ rtld_active (void)
+@@ -1357,18 +1365,11 @@ rtld_active (void)
    return GLRO(dl_init_all_dirs) != NULL;
  }
  
@@ -416,7 +416,7 @@ index 19494b82ee..3ea66b2a16 100644
  }
  
  static inline struct auditstate *
-@@ -1349,7 +1350,7 @@ link_map_audit_state (struct link_map *l, size_t index)
+@@ -1376,7 +1377,7 @@ link_map_audit_state (struct link_map *l, size_t index)
  {
    if (is_rtld_link_map (l))
      /* The auditstate array is stored separately.  */

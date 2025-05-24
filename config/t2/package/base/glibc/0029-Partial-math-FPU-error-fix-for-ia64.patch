@@ -1,7 +1,7 @@
-From c53d9ef8b8df59f68092667113ba3db982486345 Mon Sep 17 00:00:00 2001
+From de8767170e7f70869857011a460131da5054d2d8 Mon Sep 17 00:00:00 2001
 From: Tomas Glozar <tglozar@gmail.com>
 Date: Tue, 17 Oct 2023 20:27:53 +0200
-Subject: [PATCH 28/28] Partial math FPU error fix for ia64
+Subject: [PATCH 29/29] Partial math FPU error fix for ia64
 
 ---
  sysdeps/ia64/fpu/e_fmod.S           |   8 +-

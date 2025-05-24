@@ -1,3 +1,17 @@
+From 5392ae95e4aa8271c478f73374a9492a278ebfa7 Mon Sep 17 00:00:00 2001
+From: Johnny Mnemonic <jm@machine-hall.org>
+Date: Sat, 24 May 2025 14:15:50 +0200
+Subject: [PATCH 28/29] Fix build after
+ ae312544325724509ca734fcade2a05497f92b26
+
+`expl` is part of `expm1l`. That's also why sysdeps/ia64/fpu/e_expl.c only
+contains a `/* Not needed. */` comment.
+---
+ sysdeps/ia64/fpu/e_exp.S    | 1 +
+ sysdeps/ia64/fpu/e_expf.S   | 1 +
+ sysdeps/ia64/fpu/s_expm1l.S | 1 +
+ 3 files changed, 3 insertions(+)
+
 diff --git a/sysdeps/ia64/fpu/e_exp.S b/sysdeps/ia64/fpu/e_exp.S
 index c106a2dcde..b2d8f7de49 100644
 --- a/sysdeps/ia64/fpu/e_exp.S
@@ -34,3 +48,6 @@ index 769d0ff15e..7d954607aa 100644
  libm_alias_ldouble_other (__exp, exp)
  
  LOCAL_LIBM_ENTRY(__libm_error_region)
+-- 
+2.25.1
+
