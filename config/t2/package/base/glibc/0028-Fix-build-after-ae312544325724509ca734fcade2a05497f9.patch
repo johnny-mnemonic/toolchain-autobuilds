@@ -1,7 +1,7 @@
-From 5392ae95e4aa8271c478f73374a9492a278ebfa7 Mon Sep 17 00:00:00 2001
+From 2ed95840dee37781bdf48562de04cb6811ba37f0 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 24 May 2025 14:15:50 +0200
-Subject: [PATCH 28/29] Fix build after
+Subject: [PATCH 28/30] Fix build after
  ae312544325724509ca734fcade2a05497f92b26
 
 `expl` is part of `expm1l`. That's also why sysdeps/ia64/fpu/e_expl.c only

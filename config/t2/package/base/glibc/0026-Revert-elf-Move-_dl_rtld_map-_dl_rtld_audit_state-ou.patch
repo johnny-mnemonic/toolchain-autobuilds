@@ -1,7 +1,7 @@
-From 2ef16ded9ee4b02befe02412db7f5b32075039cc Mon Sep 17 00:00:00 2001
+From 7c0577dc3c2a5d7b36c0b1f2d38360459ae347cd Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 12 Mar 2025 22:40:10 +0100
-Subject: [PATCH 26/29] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
+Subject: [PATCH 26/30] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
  out of GL"
 
 This reverts commit ef5823d955dd7e6b4ffed9f3a8455d131cd7a737.
@@ -18,7 +18,7 @@ Unbreaks `ld.so` on ia64.
  4 files changed, 75 insertions(+), 75 deletions(-)
 
 diff --git a/elf/dl-load.c b/elf/dl-load.c
-index bf29ec725d..ecfe905aec 100644
+index 6e26ef0583..63f019074c 100644
 --- a/elf/dl-load.c
 +++ b/elf/dl-load.c
 @@ -756,7 +756,7 @@ _dl_init_paths (const char *llp, const char *source,
