@@ -1,4 +1,4 @@
-From e2171290e8dc6ea2ac2c05b04f50954a87366a4c Mon Sep 17 00:00:00 2001
+From d3b390ca4330fb2fd8e66b23442dd3ded421d0a1 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sun, 12 Jan 2025 21:02:55 +0100
 Subject: [PATCH 22/30] Replay "elf: Always define TLS_TP_OFFSET" also for ia64

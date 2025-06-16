@@ -1,4 +1,4 @@
-From 420c2fdfbed134a41340e4c035c6b136ae8c8009 Mon Sep 17 00:00:00 2001
+From eccc4575ae97a77d3b054c918e0456ba5a5c3169 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Mon, 2 Sep 2024 22:50:09 +0200
 Subject: [PATCH 08/30] Revert "elf: Make dl-fptr and dl-symaddr hppa specific"

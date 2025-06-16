@@ -1,4 +1,4 @@
-From 8a5b54c17c5527289666eb0d7174aed1974f2c18 Mon Sep 17 00:00:00 2001
+From 5fd208804a01b9a79142b89a966f6658e587d04b Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Thu, 5 Jun 2025 18:34:05 +0200
 Subject: [PATCH 29/30] Fix build after
