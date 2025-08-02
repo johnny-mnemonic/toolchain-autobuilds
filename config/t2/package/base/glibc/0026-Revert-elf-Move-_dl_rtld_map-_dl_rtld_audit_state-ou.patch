@@ -1,4 +1,4 @@
-From 8c6e6c8545f4f54a79c5643a520015a8f1efa60f Mon Sep 17 00:00:00 2001
+From db781874e284f173c87745cb7aca11d5f70342ac Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 12 Mar 2025 22:40:10 +0100
 Subject: [PATCH 26/30] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
@@ -11,14 +11,14 @@ the prior changes.
 
 Unbreaks `ld.so` on ia64.
 ---
- elf/dl-load.c              |  10 ++--
- elf/rtld.c                 | 117 ++++++++++++++++++-------------------
+ elf/dl-load.c              |  10 +--
+ elf/rtld.c                 | 123 ++++++++++++++++++-------------------
  elf/setup-vdso.h           |   4 +-
  sysdeps/generic/ldsodefs.h |  19 +++---
- 4 files changed, 75 insertions(+), 75 deletions(-)
+ 4 files changed, 78 insertions(+), 78 deletions(-)
 
 diff --git a/elf/dl-load.c b/elf/dl-load.c
-index 6e26ef0583..63f019074c 100644
+index 00b9da9ec7..787cb2ec42 100644
 --- a/elf/dl-load.c
 +++ b/elf/dl-load.c
 @@ -756,7 +756,7 @@ _dl_init_paths (const char *llp, const char *source,
@@ -30,7 +30,7 @@ index 6e26ef0583..63f019074c 100644
  #endif
    assert (l->l_type != lt_loaded);
  
-@@ -1017,8 +1017,8 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
+@@ -1016,8 +1016,8 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
    /* When loading into a namespace other than the base one we must
       avoid loading ld.so since there can only be one copy.  Ever.  */
    if (__glibc_unlikely (nsid != LM_ID_BASE)
@@ -41,7 +41,7 @@ index 6e26ef0583..63f019074c 100644
      {
        /* This is indeed ld.so.  Create a new link_map which refers to
  	 the real one for almost everything.  */
-@@ -1027,7 +1027,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
+@@ -1026,7 +1026,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
  	goto fail_new;
  
        /* Refer to the real descriptor.  */
@@ -50,7 +50,7 @@ index 6e26ef0583..63f019074c 100644
  
        /* Copy l_addr and l_ld to avoid a GDB warning with dlmopen().  */
        l->l_addr = l->l_real->l_addr;
-@@ -2055,7 +2055,7 @@ _dl_map_new_object (struct link_map *loader, const char *name,
+@@ -2054,7 +2054,7 @@ _dl_map_new_object (struct link_map *loader, const char *name,
  	      l = (loader
  		   ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded
  # ifdef SHARED
@@ -60,10 +60,10 @@ index 6e26ef0583..63f019074c 100644
  		  );
  
 diff --git a/elf/rtld.c b/elf/rtld.c
-index 9038a50799..ca2e8b9784 100644
+index ef4d96c053..c1813d6743 100644
 --- a/elf/rtld.c
 +++ b/elf/rtld.c
-@@ -380,8 +380,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
+@@ -379,8 +379,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
  extern struct rtld_global_ro _rtld_local_ro
      __attribute__ ((alias ("_rtld_global_ro"), visibility ("hidden")));
  
@@ -176,7 +176,45 @@ index 9038a50799..ca2e8b9784 100644
  
    return has_interp;
  }
-@@ -1346,7 +1345,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1255,11 +1254,11 @@ rtld_setup_phdr (void)
+ 
+   const ElfW(Phdr) *rtld_phdr = (const void *) rtld_ehdr + rtld_ehdr->e_phoff;
+ 
+-  _dl_rtld_map.l_phdr = rtld_phdr;
+-  _dl_rtld_map.l_phnum = rtld_ehdr->e_phnum;
++  GL(dl_rtld_map).l_phdr = rtld_phdr;
++  GL(dl_rtld_map).l_phnum = rtld_ehdr->e_phnum;
+ 
+ 
+-  _dl_rtld_map.l_contiguous = 1;
++  GL(dl_rtld_map).l_contiguous = 1;
+   /* The linker may not have produced a contiguous object.  The kernel
+      will load the object with actual gaps (unlike the glibc loader
+      for shared objects, which always produces a contiguous mapping).
+@@ -1271,9 +1270,9 @@ rtld_setup_phdr (void)
+       if (ph->p_type == PT_LOAD)
+ 	{
+ 	  ElfW(Addr) mapstart = ph->p_vaddr & ~(GLRO(dl_pagesize) - 1);
+-	  if (_dl_rtld_map.l_contiguous && expected_load_address != 0
++	  if (GL(dl_rtld_map).l_contiguous && expected_load_address != 0
+ 	      && expected_load_address != mapstart)
+-	    _dl_rtld_map.l_contiguous = 0;
++	    GL(dl_rtld_map).l_contiguous = 0;
+ 	  ElfW(Addr) allocend = ph->p_vaddr + ph->p_memsz;
+ 	  /* The next expected address is the page following this load
+ 	     segment.  */
+@@ -1287,8 +1286,8 @@ rtld_setup_phdr (void)
+   while (cnt-- > 0)
+     if (rtld_phdr[cnt].p_type == PT_GNU_RELRO)
+       {
+-	_dl_rtld_map.l_relro_addr = rtld_phdr[cnt].p_vaddr;
+-	_dl_rtld_map.l_relro_size = rtld_phdr[cnt].p_memsz;
++	GL(dl_rtld_map).l_relro_addr = rtld_phdr[cnt].p_vaddr;
++	GL(dl_rtld_map).l_relro_size = rtld_phdr[cnt].p_memsz;
+ 	break;
+       }
+ }
+@@ -1400,7 +1399,7 @@ dl_main (const ElfW(Phdr) *phdr,
        char **orig_argv = _dl_argv;
  
        /* Note the place where the dynamic linker actually came from.  */
@@ -185,7 +223,7 @@ index 9038a50799..ca2e8b9784 100644
  
        while (_dl_argc > 1)
  	if (! strcmp (_dl_argv[1], "--list"))
-@@ -1630,22 +1629,22 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1684,22 +1683,22 @@ dl_main (const ElfW(Phdr) *phdr,
    /* If the current libname is different from the SONAME, add the
       latter as well.  */
    {
@@ -213,7 +251,7 @@ index 9038a50799..ca2e8b9784 100644
  
    if (! rtld_is_main)
      {
-@@ -1675,7 +1674,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1729,7 +1728,7 @@ dl_main (const ElfW(Phdr) *phdr,
        _exit (has_interp ? 0 : 2);
      }
  
@@ -222,7 +260,7 @@ index 9038a50799..ca2e8b9784 100644
    /* Set up the data structures for the system-supplied DSO early,
       so they can influence _dl_init_paths.  */
    setup_vdso (main_map, &first_preload);
-@@ -1688,20 +1687,20 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1742,29 +1741,29 @@ dl_main (const ElfW(Phdr) *phdr,
    call_init_paths (&state);
  
    /* Initialize _r_debug_extended.  */
@@ -249,27 +287,7 @@ index 9038a50799..ca2e8b9784 100644
    ++GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
    ++GL(dl_load_adds);
  
-@@ -1719,8 +1718,8 @@ dl_main (const ElfW(Phdr) *phdr,
- 
-   const ElfW(Phdr) *rtld_phdr = (const void *) rtld_ehdr + rtld_ehdr->e_phoff;
- 
--  _dl_rtld_map.l_phdr = rtld_phdr;
--  _dl_rtld_map.l_phnum = rtld_ehdr->e_phnum;
-+  GL(dl_rtld_map).l_phdr = rtld_phdr;
-+  GL(dl_rtld_map).l_phnum = rtld_ehdr->e_phnum;
- 
- 
-   /* PT_GNU_RELRO is usually the last phdr.  */
-@@ -1728,15 +1727,15 @@ dl_main (const ElfW(Phdr) *phdr,
-   while (cnt-- > 0)
-     if (rtld_phdr[cnt].p_type == PT_GNU_RELRO)
-       {
--	_dl_rtld_map.l_relro_addr = rtld_phdr[cnt].p_vaddr;
--	_dl_rtld_map.l_relro_size = rtld_phdr[cnt].p_memsz;
-+	GL(dl_rtld_map).l_relro_addr = rtld_phdr[cnt].p_vaddr;
-+	GL(dl_rtld_map).l_relro_size = rtld_phdr[cnt].p_memsz;
- 	break;
-       }
+   rtld_setup_phdr ();
  
    /* Add the dynamic linker to the TLS list if it also uses TLS.  */
 -  if (_dl_rtld_map.l_tls_blocksize != 0)
@@ -280,7 +298,7 @@ index 9038a50799..ca2e8b9784 100644
  
    audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_AUDIT);
    audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_DEPAUDIT);
-@@ -1930,9 +1929,9 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1957,9 +1956,9 @@ dl_main (const ElfW(Phdr) *phdr,
      main_map->l_searchlist.r_list[--i]->l_global = 1;
  
    /* Remove _dl_rtld_map from the chain.  */
@@ -293,7 +311,7 @@ index 9038a50799..ca2e8b9784 100644
  
    for (i = 1; i < main_map->l_searchlist.r_nlist; ++i)
      if (is_rtld_link_map (main_map->l_searchlist.r_list[i]))
-@@ -1942,17 +1941,17 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1969,17 +1968,17 @@ dl_main (const ElfW(Phdr) *phdr,
       symbol search order because gdb uses the chain's order as its
       symbol search order.  */
  
@@ -316,7 +334,7 @@ index 9038a50799..ca2e8b9784 100644
  #endif
      }
    else
-@@ -1961,14 +1960,14 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1988,14 +1987,14 @@ dl_main (const ElfW(Phdr) *phdr,
         In this case it doesn't matter much where we put the
         interpreter object, so we just initialize the list pointer so
         that the assertion below holds.  */
@@ -337,7 +355,7 @@ index 9038a50799..ca2e8b9784 100644
      }
  
    /* Now let us see whether all libraries are available in the
-@@ -2110,7 +2109,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -2137,7 +2136,7 @@ dl_main (const ElfW(Phdr) *phdr,
  	      while (i-- > 0)
  		{
  		  struct link_map *l = main_map->l_initfini[i];
@@ -346,7 +364,7 @@ index 9038a50799..ca2e8b9784 100644
  		    {
  		      args.l = l;
  		      _dl_receive_error (print_unresolved, relocate_doit,
-@@ -2309,7 +2308,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -2336,7 +2335,7 @@ dl_main (const ElfW(Phdr) *phdr,
      {
        RTLD_TIMING_VAR (start);
        rtld_timer_start (&start);
@@ -355,7 +373,7 @@ index 9038a50799..ca2e8b9784 100644
        rtld_timer_accum (&relocate_time, start);
  
        __rtld_mutex_init ();
-@@ -2317,7 +2316,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -2347,7 +2346,7 @@ dl_main (const ElfW(Phdr) *phdr,
      }
  
    /* All ld.so initialization is complete.  Apply RELRO.  */
@@ -380,10 +398,10 @@ index 935d9e3baf..8347e3355b 100644
  # else
        GL(dl_nns) = 1;
 diff --git a/sysdeps/generic/ldsodefs.h b/sysdeps/generic/ldsodefs.h
-index fc4a3de767..44bc77047f 100644
+index 74025f1f93..16a48b57ed 100644
 --- a/sysdeps/generic/ldsodefs.h
 +++ b/sysdeps/generic/ldsodefs.h
-@@ -410,6 +410,14 @@ struct rtld_global
+@@ -408,6 +408,14 @@ struct rtld_global
    /* List of search directories.  */
    EXTERN struct r_search_path_elem *_dl_all_dirs;
  
@@ -398,7 +416,7 @@ index fc4a3de767..44bc77047f 100644
    /* Get architecture specific definitions.  */
  #define PROCINFO_DECL
  #ifndef PROCINFO_CLASS
-@@ -1357,18 +1365,11 @@ rtld_active (void)
+@@ -1369,18 +1377,11 @@ rtld_active (void)
    return GLRO(dl_init_all_dirs) != NULL;
  }
  
@@ -418,7 +436,7 @@ index fc4a3de767..44bc77047f 100644
  }
  
  static inline struct auditstate *
-@@ -1376,7 +1377,7 @@ link_map_audit_state (struct link_map *l, size_t index)
+@@ -1388,7 +1389,7 @@ link_map_audit_state (struct link_map *l, size_t index)
  {
    if (is_rtld_link_map (l))
      /* The auditstate array is stored separately.  */
