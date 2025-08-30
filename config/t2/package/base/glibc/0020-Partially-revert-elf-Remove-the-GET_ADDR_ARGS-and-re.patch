@@ -1,7 +1,7 @@
-From 156e78a1d53f02ceddd767157facec183deff1f3 Mon Sep 17 00:00:00 2001
+From d2efb6c5255b8028215e23d3ae4a2028032f1f5a Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 28 Dec 2024 00:21:46 +0100
-Subject: [PATCH 20/30] Partially revert "elf: Remove the GET_ADDR_ARGS and
+Subject: [PATCH 20/31] Partially revert "elf: Remove the GET_ADDR_ARGS and
  related macros [...]"
 
 This partially reverts commit 5e249192cac7354af02a7347a0d8c984e0c88ed3.

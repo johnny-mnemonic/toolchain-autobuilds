@@ -1,7 +1,7 @@
-From db781874e284f173c87745cb7aca11d5f70342ac Mon Sep 17 00:00:00 2001
+From 5ecba3c7e7d524a44259074fd388741c30aa1a02 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 12 Mar 2025 22:40:10 +0100
-Subject: [PATCH 26/30] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
+Subject: [PATCH 26/31] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
  out of GL"
 
 This reverts commit ef5823d955dd7e6b4ffed9f3a8455d131cd7a737.
@@ -18,7 +18,7 @@ Unbreaks `ld.so` on ia64.
  4 files changed, 78 insertions(+), 78 deletions(-)
 
 diff --git a/elf/dl-load.c b/elf/dl-load.c
-index 00b9da9ec7..787cb2ec42 100644
+index 891b44966c..1c23534fc0 100644
 --- a/elf/dl-load.c
 +++ b/elf/dl-load.c
 @@ -756,7 +756,7 @@ _dl_init_paths (const char *llp, const char *source,
@@ -50,7 +50,7 @@ index 00b9da9ec7..787cb2ec42 100644
  
        /* Copy l_addr and l_ld to avoid a GDB warning with dlmopen().  */
        l->l_addr = l->l_real->l_addr;
-@@ -2054,7 +2054,7 @@ _dl_map_new_object (struct link_map *loader, const char *name,
+@@ -2043,7 +2043,7 @@ _dl_map_new_object (struct link_map *loader, const char *name,
  	      l = (loader
  		   ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded
  # ifdef SHARED
@@ -60,7 +60,7 @@ index 00b9da9ec7..787cb2ec42 100644
  		  );
  
 diff --git a/elf/rtld.c b/elf/rtld.c
-index ef4d96c053..c1813d6743 100644
+index 753ce6690b..4c368dd18c 100644
 --- a/elf/rtld.c
 +++ b/elf/rtld.c
 @@ -379,8 +379,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
@@ -223,7 +223,7 @@ index ef4d96c053..c1813d6743 100644
  
        while (_dl_argc > 1)
  	if (! strcmp (_dl_argv[1], "--list"))
-@@ -1684,22 +1683,22 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1682,22 +1681,22 @@ dl_main (const ElfW(Phdr) *phdr,
    /* If the current libname is different from the SONAME, add the
       latter as well.  */
    {
@@ -251,7 +251,7 @@ index ef4d96c053..c1813d6743 100644
  
    if (! rtld_is_main)
      {
-@@ -1729,7 +1728,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1727,7 +1726,7 @@ dl_main (const ElfW(Phdr) *phdr,
        _exit (has_interp ? 0 : 2);
      }
  
@@ -260,7 +260,7 @@ index ef4d96c053..c1813d6743 100644
    /* Set up the data structures for the system-supplied DSO early,
       so they can influence _dl_init_paths.  */
    setup_vdso (main_map, &first_preload);
-@@ -1742,29 +1741,29 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1740,29 +1739,29 @@ dl_main (const ElfW(Phdr) *phdr,
    call_init_paths (&state);
  
    /* Initialize _r_debug_extended.  */
@@ -298,7 +298,7 @@ index ef4d96c053..c1813d6743 100644
  
    audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_AUDIT);
    audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_DEPAUDIT);
-@@ -1957,9 +1956,9 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1955,9 +1954,9 @@ dl_main (const ElfW(Phdr) *phdr,
      main_map->l_searchlist.r_list[--i]->l_global = 1;
  
    /* Remove _dl_rtld_map from the chain.  */
@@ -311,7 +311,7 @@ index ef4d96c053..c1813d6743 100644
  
    for (i = 1; i < main_map->l_searchlist.r_nlist; ++i)
      if (is_rtld_link_map (main_map->l_searchlist.r_list[i]))
-@@ -1969,17 +1968,17 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1967,17 +1966,17 @@ dl_main (const ElfW(Phdr) *phdr,
       symbol search order because gdb uses the chain's order as its
       symbol search order.  */
  
@@ -334,7 +334,7 @@ index ef4d96c053..c1813d6743 100644
  #endif
      }
    else
-@@ -1988,14 +1987,14 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -1986,14 +1985,14 @@ dl_main (const ElfW(Phdr) *phdr,
         In this case it doesn't matter much where we put the
         interpreter object, so we just initialize the list pointer so
         that the assertion below holds.  */
@@ -355,7 +355,7 @@ index ef4d96c053..c1813d6743 100644
      }
  
    /* Now let us see whether all libraries are available in the
-@@ -2137,7 +2136,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -2135,7 +2134,7 @@ dl_main (const ElfW(Phdr) *phdr,
  	      while (i-- > 0)
  		{
  		  struct link_map *l = main_map->l_initfini[i];
@@ -364,7 +364,7 @@ index ef4d96c053..c1813d6743 100644
  		    {
  		      args.l = l;
  		      _dl_receive_error (print_unresolved, relocate_doit,
-@@ -2336,7 +2335,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -2334,7 +2333,7 @@ dl_main (const ElfW(Phdr) *phdr,
      {
        RTLD_TIMING_VAR (start);
        rtld_timer_start (&start);
@@ -373,7 +373,7 @@ index ef4d96c053..c1813d6743 100644
        rtld_timer_accum (&relocate_time, start);
  
        __rtld_mutex_init ();
-@@ -2347,7 +2346,7 @@ dl_main (const ElfW(Phdr) *phdr,
+@@ -2345,7 +2344,7 @@ dl_main (const ElfW(Phdr) *phdr,
      }
  
    /* All ld.so initialization is complete.  Apply RELRO.  */
@@ -398,10 +398,10 @@ index 935d9e3baf..8347e3355b 100644
  # else
        GL(dl_nns) = 1;
 diff --git a/sysdeps/generic/ldsodefs.h b/sysdeps/generic/ldsodefs.h
-index 74025f1f93..16a48b57ed 100644
+index 31e9a6b600..6196a8434e 100644
 --- a/sysdeps/generic/ldsodefs.h
 +++ b/sysdeps/generic/ldsodefs.h
-@@ -408,6 +408,14 @@ struct rtld_global
+@@ -395,6 +395,14 @@ struct rtld_global
    /* List of search directories.  */
    EXTERN struct r_search_path_elem *_dl_all_dirs;
  
@@ -416,7 +416,7 @@ index 74025f1f93..16a48b57ed 100644
    /* Get architecture specific definitions.  */
  #define PROCINFO_DECL
  #ifndef PROCINFO_CLASS
-@@ -1369,18 +1377,11 @@ rtld_active (void)
+@@ -1356,18 +1364,11 @@ rtld_active (void)
    return GLRO(dl_init_all_dirs) != NULL;
  }
  
@@ -436,7 +436,7 @@ index 74025f1f93..16a48b57ed 100644
  }
  
  static inline struct auditstate *
-@@ -1388,7 +1389,7 @@ link_map_audit_state (struct link_map *l, size_t index)
+@@ -1375,7 +1376,7 @@ link_map_audit_state (struct link_map *l, size_t index)
  {
    if (is_rtld_link_map (l))
      /* The auditstate array is stored separately.  */
