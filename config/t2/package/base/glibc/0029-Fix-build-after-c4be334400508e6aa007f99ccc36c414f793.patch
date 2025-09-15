@@ -1,7 +1,7 @@
-From 23eaf6d05e406e6402133c4bcbf0acba05cdd201 Mon Sep 17 00:00:00 2001
+From cc3a4cb14169666e71f674c656a8642712d70a1c Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Thu, 5 Jun 2025 18:34:05 +0200
-Subject: [PATCH 29/31] Fix build after
+Subject: [PATCH 29/32] Fix build after
  c4be334400508e6aa007f99ccc36c414f793c387
 
 by dropping sysdeps/ia64/fpu/math_err.c like it's done for i386 and m68k.
