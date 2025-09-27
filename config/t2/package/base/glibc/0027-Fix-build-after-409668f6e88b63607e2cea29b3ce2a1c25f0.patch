@@ -1,7 +1,7 @@
 From 9dc8874d705350bf54bf35aafbda17a9f793ef8f Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sun, 16 Mar 2025 22:47:57 +0100
-Subject: [PATCH 27/33] Fix build after
+Subject: [PATCH 27/34] Fix build after
  409668f6e88b63607e2cea29b3ce2a1c25f04bf1
 
 Fixes #12.
