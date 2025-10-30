@@ -1,4 +1,4 @@
-From 69e37bfc4437afe7ad189eb3b3684e84e995fa80 Mon Sep 17 00:00:00 2001
+From afc3627d261c5b77112f60355dc51faf7dbe6890 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 12 Mar 2025 22:40:10 +0100
 Subject: [PATCH 26/34] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
@@ -18,7 +18,7 @@ Unbreaks `ld.so` on ia64.
  4 files changed, 78 insertions(+), 78 deletions(-)
 
 diff --git a/elf/dl-load.c b/elf/dl-load.c
-index 891b44966c..1c23534fc0 100644
+index 0c57b86e3c..c6cc4c6119 100644
 --- a/elf/dl-load.c
 +++ b/elf/dl-load.c
 @@ -756,7 +756,7 @@ _dl_init_paths (const char *llp, const char *source,
@@ -50,7 +50,7 @@ index 891b44966c..1c23534fc0 100644
  
        /* Copy l_addr and l_ld to avoid a GDB warning with dlmopen().  */
        l->l_addr = l->l_real->l_addr;
-@@ -2043,7 +2043,7 @@ _dl_map_new_object (struct link_map *loader, const char *name,
+@@ -2059,7 +2059,7 @@ _dl_map_new_object (struct link_map *loader, const char *name,
  	      l = (loader
  		   ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded
  # ifdef SHARED
@@ -60,7 +60,7 @@ index 891b44966c..1c23534fc0 100644
  		  );
  
 diff --git a/elf/rtld.c b/elf/rtld.c
-index 753ce6690b..4c368dd18c 100644
+index 299f8dd60e..adeda37447 100644
 --- a/elf/rtld.c
 +++ b/elf/rtld.c
 @@ -379,8 +379,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =

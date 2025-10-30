@@ -1,8 +1,10 @@
-From 3c170e62f62b89ae343397e6b517dc356fb48e8e Mon Sep 17 00:00:00 2001
+From 4e72ede618d007118902b66a205b8ac8cc1861d4 Mon Sep 17 00:00:00 2001
 From: Tomas Glozar <tglozar@gmail.com>
 Date: Tue, 17 Oct 2023 20:27:53 +0200
 Subject: [PATCH 34/34] Partial math FPU error fix for ia64
 
+This patch is adopted from an attachment to
+https://sourceware.org/bugzilla/show_bug.cgi?id=10163 by Aurelien Jarno
 ---
  sysdeps/ia64/fpu/e_fmod.S           |   8 +-
  sysdeps/ia64/fpu/e_fmodf.S          |   8 +-

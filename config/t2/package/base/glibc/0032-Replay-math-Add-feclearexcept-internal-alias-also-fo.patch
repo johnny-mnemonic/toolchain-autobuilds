@@ -1,4 +1,4 @@
-From f4c8e3880ff05550e6003974ce666bc3fbe386d1 Mon Sep 17 00:00:00 2001
+From db517a480eba416d6452cb5b39174ba49fdcea21 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Tue, 16 Sep 2025 08:00:23 +0200
 Subject: [PATCH 32/34] Replay "math: Add feclearexcept internal alias" also
