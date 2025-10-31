@@ -1,4 +1,4 @@
-From aee0ea853982168cd3426deef48b614ef385f34b Mon Sep 17 00:00:00 2001
+From 50cd692a4331a39401a91084b8025f2e8675c277 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Thu, 3 Oct 2024 19:34:09 +0200
 Subject: [PATCH 09/34] ia64: Qualify 'u' and 'bits' with '__' prefix

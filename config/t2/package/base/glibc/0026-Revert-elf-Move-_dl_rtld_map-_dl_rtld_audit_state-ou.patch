@@ -1,4 +1,4 @@
-From afc3627d261c5b77112f60355dc51faf7dbe6890 Mon Sep 17 00:00:00 2001
+From c7d02f06554e634c408659ed91aaecc798325428 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 12 Mar 2025 22:40:10 +0100
 Subject: [PATCH 26/34] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
