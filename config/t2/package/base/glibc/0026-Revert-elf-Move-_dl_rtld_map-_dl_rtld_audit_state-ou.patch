@@ -1,7 +1,7 @@
-From c7d02f06554e634c408659ed91aaecc798325428 Mon Sep 17 00:00:00 2001
+From 66911f727e8dece13a6952bca8ec4500e9728396 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 12 Mar 2025 22:40:10 +0100
-Subject: [PATCH 26/34] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
+Subject: [PATCH 26/35] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
  out of GL"
 
 This reverts commit ef5823d955dd7e6b4ffed9f3a8455d131cd7a737.
@@ -60,7 +60,7 @@ index 0c57b86e3c..c6cc4c6119 100644
  		  );
  
 diff --git a/elf/rtld.c b/elf/rtld.c
-index 299f8dd60e..adeda37447 100644
+index 5ea5383eb6..a7f2546cb5 100644
 --- a/elf/rtld.c
 +++ b/elf/rtld.c
 @@ -379,8 +379,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
@@ -398,7 +398,7 @@ index 935d9e3baf..8347e3355b 100644
  # else
        GL(dl_nns) = 1;
 diff --git a/sysdeps/generic/ldsodefs.h b/sysdeps/generic/ldsodefs.h
-index 31e9a6b600..6196a8434e 100644
+index cb318ade7b..fc6ede6456 100644
 --- a/sysdeps/generic/ldsodefs.h
 +++ b/sysdeps/generic/ldsodefs.h
 @@ -395,6 +395,14 @@ struct rtld_global
@@ -416,7 +416,7 @@ index 31e9a6b600..6196a8434e 100644
    /* Get architecture specific definitions.  */
  #define PROCINFO_DECL
  #ifndef PROCINFO_CLASS
-@@ -1356,18 +1364,11 @@ rtld_active (void)
+@@ -1357,18 +1365,11 @@ rtld_active (void)
    return GLRO(dl_init_all_dirs) != NULL;
  }
  
@@ -436,7 +436,7 @@ index 31e9a6b600..6196a8434e 100644
  }
  
  static inline struct auditstate *
-@@ -1375,7 +1376,7 @@ link_map_audit_state (struct link_map *l, size_t index)
+@@ -1376,7 +1377,7 @@ link_map_audit_state (struct link_map *l, size_t index)
  {
    if (is_rtld_link_map (l))
      /* The auditstate array is stored separately.  */

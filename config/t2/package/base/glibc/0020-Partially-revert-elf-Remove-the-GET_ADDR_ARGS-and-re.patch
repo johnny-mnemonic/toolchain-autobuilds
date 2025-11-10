@@ -1,7 +1,7 @@
-From fc455d1eea62194ff781fc3e1274730acb074502 Mon Sep 17 00:00:00 2001
+From 843d674eecb39861051d984f0af8a00f5b09c636 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 28 Dec 2024 00:21:46 +0100
-Subject: [PATCH 20/34] Partially revert "elf: Remove the GET_ADDR_ARGS and
+Subject: [PATCH 20/35] Partially revert "elf: Remove the GET_ADDR_ARGS and
  related macros [...]"
 
 This partially reverts commit 5e249192cac7354af02a7347a0d8c984e0c88ed3.
@@ -15,10 +15,10 @@ Fixes #7 for now.
  1 file changed, 38 insertions(+), 21 deletions(-)
 
 diff --git a/elf/dl-tls.c b/elf/dl-tls.c
-index aacd80cbe5..dbb120936c 100644
+index 7d815e102f..efe0679001 100644
 --- a/elf/dl-tls.c
 +++ b/elf/dl-tls.c
-@@ -742,6 +742,23 @@ rtld_hidden_def (_dl_deallocate_tls)
+@@ -748,6 +748,23 @@ rtld_hidden_def (_dl_deallocate_tls)
  
  
  #ifdef SHARED
@@ -42,7 +42,7 @@ index aacd80cbe5..dbb120936c 100644
  
  /* Allocate one DTV entry.  */
  static struct dtv_pointer
-@@ -940,25 +957,25 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
+@@ -946,25 +963,25 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
  /* Adjust the TLS variable pointer using the TLS descriptor offset and
     the ABI-specific offset.  */
  static inline void *
@@ -72,7 +72,7 @@ index aacd80cbe5..dbb120936c 100644
        struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
  
        while (idx >= listp->len)
-@@ -995,35 +1012,35 @@ tls_get_addr_tail (tls_index *ti, dtv_t *dtv, struct link_map *the_map)
+@@ -1001,35 +1018,35 @@ tls_get_addr_tail (tls_index *ti, dtv_t *dtv, struct link_map *the_map)
  #endif
  	  __rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
  
@@ -118,7 +118,7 @@ index aacd80cbe5..dbb120936c 100644
  }
  
  /* For all machines that have a non-macro version of __tls_get_addr, we
-@@ -1032,7 +1049,7 @@ update_get_addr (tls_index *ti, size_t gen)
+@@ -1038,7 +1055,7 @@ update_get_addr (tls_index *ti, size_t gen)
     in ld.so for __tls_get_addr.  */
  
  #ifndef __tls_get_addr
@@ -127,7 +127,7 @@ index aacd80cbe5..dbb120936c 100644
  rtld_hidden_proto (__tls_get_addr)
  rtld_hidden_def (__tls_get_addr)
  #endif
-@@ -1040,7 +1057,7 @@ rtld_hidden_def (__tls_get_addr)
+@@ -1046,7 +1063,7 @@ rtld_hidden_def (__tls_get_addr)
  /* The generic dynamic and local dynamic model cannot be used in
     statically linked applications.  */
  void *
@@ -136,7 +136,7 @@ index aacd80cbe5..dbb120936c 100644
  {
    dtv_t *dtv = THREAD_DTV ();
  
-@@ -1052,7 +1069,7 @@ __tls_get_addr (tls_index *ti)
+@@ -1058,7 +1075,7 @@ __tls_get_addr (tls_index *ti)
    if (__glibc_unlikely (dtv[0].counter != gen))
      {
        if (_dl_tls_allocate_active ()
@@ -145,7 +145,7 @@ index aacd80cbe5..dbb120936c 100644
  	  /* This is a reentrant __tls_get_addr call, but we can
  	     satisfy it because it's an initially-loaded module ID.
  	     These TLS slotinfo slots do not change, so the
-@@ -1065,16 +1082,16 @@ __tls_get_addr (tls_index *ti)
+@@ -1071,16 +1088,16 @@ __tls_get_addr (tls_index *ti)
  	  /* Update DTV up to the global generation, see CONCURRENCY NOTES
  	     in _dl_update_slotinfo.  */
  	  gen = atomic_load_acquire (&GL(dl_tls_generation));

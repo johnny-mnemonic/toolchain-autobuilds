@@ -1,0 +1,594 @@
+From 4f7e091a19ea7f331a211dc16f13e99995661752 Mon Sep 17 00:00:00 2001
+From: Johnny Mnemonic <jm@machine-hall.org>
+Date: Mon, 10 Nov 2025 21:36:17 +0100
+Subject: [PATCH 34/35] Revert "math: Remove the SVID error handling from
+ lgammaf/lgammaf_r"
+
+This reverts commit de0e623434fcce907a5be8cc386c95d6b07ba408.
+
+This commit breaks the build for ia64:
+
+```
+/usr/src/t2-src/build/ia64-toolchain-24-svn-generic-ia64-itanium2-cross-linux/TOOLCHAIN/cross/bin/../lib/gcc/ia64-t2-linux-gnu/16.0.0/../../../../ia64-t2-linux-gnu/bin/ld: /usr/src/t2-src/src.glibc.ia64-toolchain.251110.040340.118274/glibc-2.42.9000-464-g494ba55d0b/objs/math/libm_pic.a(w_lgamma_compatf.os): in function `__lgammaf_compat':
+w_lgamma_compatf.c:(.text+0x0): multiple definition of `__lgammaf_compat'; /usr/src/t2-src/src.glibc.ia64-toolchain.251110.040340.118274/glibc-2.42.9000-464-g494ba55d0b/objs/math/libm_pic.a(w_lgammaf_compat2.os):w_lgammaf_compat2.c:(.text+0x0): first defined here
+/usr/src/t2-src/build/ia64-toolchain-24-svn-generic-ia64-itanium2-cross-linux/TOOLCHAIN/cross/bin/../lib/gcc/ia64-t2-linux-gnu/16.0.0/../../../../ia64-t2-linux-gnu/bin/ld: /usr/src/t2-src/src.glibc.ia64-toolchain.251110.040340.118274/glibc-2.42.9000-464-g494ba55d0b/objs/math/libm_pic.a(w_lgammaf.os): in function `__lgammaf':
+w_lgammaf.c:(.text+0x22): undefined reference to `__lgammaf_r'
+collect2: error: ld returned 1 exit status
+make[2]: *** [../Makerules:542: /usr/src/t2-src/src.glibc.ia64-toolchain.251110.040340.118274/glibc-2.42.9000-464-g494ba55d0b/objs/math/libm.so] Error 1
+```
+
+...and so far I couldn't find a solution for ia64, so let's revert
+it instead for the time being.
+---
+ math/Versions                                 |  2 --
+ math/lgamma-compat.h                          | 15 +++---------
+ math/w_lgammaf_compat2.c                      |  2 +-
+ math/w_lgammaf_main.c                         |  7 +++++-
+ math/w_lgammaf_r_compat.c                     |  5 ++--
+ sysdeps/ieee754/flt-32/e_lgammaf_r.c          | 24 +++++--------------
+ sysdeps/ieee754/flt-32/w_lgammaf.c            | 17 -------------
+ sysdeps/ieee754/flt-32/w_lgammaf_r.c          |  1 -
+ sysdeps/mach/hurd/i386/libm.abilist           |  2 --
+ sysdeps/unix/sysv/linux/aarch64/libm.abilist  |  2 --
+ sysdeps/unix/sysv/linux/alpha/libm.abilist    |  2 --
+ sysdeps/unix/sysv/linux/arm/be/libm.abilist   |  2 --
+ sysdeps/unix/sysv/linux/arm/le/libm.abilist   |  2 --
+ sysdeps/unix/sysv/linux/hppa/libm.abilist     |  2 --
+ sysdeps/unix/sysv/linux/i386/libm.abilist     |  2 --
+ .../sysv/linux/m68k/coldfire/libm.abilist     |  2 --
+ .../unix/sysv/linux/m68k/m680x0/libm.abilist  |  2 --
+ .../sysv/linux/microblaze/be/libm.abilist     |  2 --
+ .../sysv/linux/microblaze/le/libm.abilist     |  2 --
+ .../unix/sysv/linux/mips/mips32/libm.abilist  |  2 --
+ .../unix/sysv/linux/mips/mips64/libm.abilist  |  2 --
+ .../linux/powerpc/powerpc32/fpu/libm.abilist  |  2 --
+ .../powerpc/powerpc32/nofpu/libm.abilist      |  2 --
+ .../linux/powerpc/powerpc64/be/libm.abilist   |  2 --
+ .../linux/powerpc/powerpc64/le/libm.abilist   |  2 --
+ .../unix/sysv/linux/s390/s390-32/libm.abilist |  2 --
+ .../unix/sysv/linux/s390/s390-64/libm.abilist |  2 --
+ sysdeps/unix/sysv/linux/sh/be/libm.abilist    |  2 --
+ sysdeps/unix/sysv/linux/sh/le/libm.abilist    |  2 --
+ .../sysv/linux/sparc/sparc32/libm.abilist     |  2 --
+ .../sysv/linux/sparc/sparc64/libm.abilist     |  2 --
+ .../unix/sysv/linux/x86_64/64/libm.abilist    |  2 --
+ .../unix/sysv/linux/x86_64/x32/libm.abilist   |  2 --
+ 33 files changed, 18 insertions(+), 105 deletions(-)
+ delete mode 100644 sysdeps/ieee754/flt-32/w_lgammaf.c
+ delete mode 100644 sysdeps/ieee754/flt-32/w_lgammaf_r.c
+
+diff --git a/math/Versions b/math/Versions
+index d6ad34f459..69aa19c5c4 100644
+--- a/math/Versions
++++ b/math/Versions
+@@ -697,8 +697,6 @@ libm {
+     j0f;
+     j1f;
+     jnf;
+-    lgammaf;
+-    lgammaf_r;
+     log10f;
+     remainder;
+     remainderf;
+diff --git a/math/lgamma-compat.h b/math/lgamma-compat.h
+index 795e97d5a0..bf4acef559 100644
+--- a/math/lgamma-compat.h
++++ b/math/lgamma-compat.h
+@@ -34,17 +34,10 @@
+    old glibc.
+ 
+    Users of this file define USE_AS_COMPAT to 0 when building the main
+-   version of lgamma, 1 when building the compatibility version that
+-   handles signgam visibility, and 2 when building the compatibility
+-   that handles SVID support).  */
++   version of lgamma, 1 when building the compatibility version.  */
+ 
+-#if USE_AS_COMPAT <= 1
+ #define LGAMMA_OLD_VER GLIBC_2_0
+ #define LGAMMA_NEW_VER GLIBC_2_23
+-#elif USE_AS_COMPAT == 2
+-#define LGAMMA_OLD_VER    GLIBC_2_23
+-#define LGAMMA_NEW_VER    GLIBC_2_43
+-#endif
+ #define HAVE_LGAMMA_COMPAT SHLIB_COMPAT (libm, LGAMMA_OLD_VER, LGAMMA_NEW_VER)
+ 
+ /* Whether to build this version at all.  */
+@@ -52,10 +45,8 @@
+   (LIBM_SVID_COMPAT && (HAVE_LGAMMA_COMPAT || !USE_AS_COMPAT))
+ 
+ /* The name to use for this version.  */
+-#if USE_AS_COMPAT == 1
++#if USE_AS_COMPAT
+ # define LGFUNC(FUNC) FUNC ## _compat
+-#elif USE_AS_COMPAT == 2
+-# define LGFUNC(FUNC) FUNC ## _compat2
+ #else
+ # define LGFUNC(FUNC) FUNC
+ #endif
+@@ -63,7 +54,7 @@
+ /* If there is a compatibility version, gamma (not an ISO C function,
+    so never a problem for it to set signgam) points directly to it
+    rather than having separate versions.  */
+-#define GAMMA_ALIAS (USE_AS_COMPAT == 1 ? HAVE_LGAMMA_COMPAT : !HAVE_LGAMMA_COMPAT)
++#define GAMMA_ALIAS (USE_AS_COMPAT ? HAVE_LGAMMA_COMPAT : !HAVE_LGAMMA_COMPAT)
+ 
+ /* How to call the underlying lgamma_r function.  */
+ #define CALL_LGAMMA(TYPE, FUNC, ARG)			\
+diff --git a/math/w_lgammaf_compat2.c b/math/w_lgammaf_compat2.c
+index 3a942dbe04..5fc402260c 100644
+--- a/math/w_lgammaf_compat2.c
++++ b/math/w_lgammaf_compat2.c
+@@ -1,2 +1,2 @@
+-#define USE_AS_COMPAT 2
++#define USE_AS_COMPAT 0
+ #include <w_lgammaf_main.c>
+diff --git a/math/w_lgammaf_main.c b/math/w_lgammaf_main.c
+index 8d475d3a6c..22b7f8fc53 100644
+--- a/math/w_lgammaf_main.c
++++ b/math/w_lgammaf_main.c
+@@ -33,7 +33,12 @@ LGFUNC (__lgammaf) (float x)
+ 
+ 	return y;
+ }
+-compat_symbol (libm, LGFUNC (__lgammaf), lgammaf, LGAMMA_OLD_VER);
++# if USE_AS_COMPAT
++compat_symbol (libm, __lgammaf_compat, lgammaf, LGAMMA_OLD_VER);
++# else
++versioned_symbol (libm, __lgammaf, lgammaf, LGAMMA_NEW_VER);
++libm_alias_float_other (__lgamma, lgamma)
++# endif
+ # if GAMMA_ALIAS
+ strong_alias (LGFUNC (__lgammaf), __gammaf)
+ weak_alias (__gammaf, gammaf)
+diff --git a/math/w_lgammaf_r_compat.c b/math/w_lgammaf_r_compat.c
+index 524f9901d3..be01b6daac 100644
+--- a/math/w_lgammaf_r_compat.c
++++ b/math/w_lgammaf_r_compat.c
+@@ -20,12 +20,11 @@
+ #include <math_private.h>
+ #include <math-svid-compat.h>
+ #include <libm-alias-float.h>
+-#include <shlib-compat.h>
+ 
+ 
+ #if LIBM_SVID_COMPAT
+ float
+-__lgammaf_r_svidf(float x, int *signgamp)
++__lgammaf_r(float x, int *signgamp)
+ {
+ 	float y = __ieee754_lgammaf_r(x,signgamp);
+ 	if(__builtin_expect(!isfinite(y), 0)
+@@ -37,5 +36,5 @@ __lgammaf_r_svidf(float x, int *signgamp)
+ 
+ 	return y;
+ }
+-compat_symbol (libm, __lgammaf_r_svidf, lgammaf_r, GLIBC_2_0);
++libm_alias_float_r (__lgamma, lgamma, _r)
+ #endif
+diff --git a/sysdeps/ieee754/flt-32/e_lgammaf_r.c b/sysdeps/ieee754/flt-32/e_lgammaf_r.c
+index 2fb4784b59..059afa86c6 100644
+--- a/sysdeps/ieee754/flt-32/e_lgammaf_r.c
++++ b/sysdeps/ieee754/flt-32/e_lgammaf_r.c
+@@ -36,8 +36,6 @@ SOFTWARE.
+ #include <math.h>
+ #include <libm-alias-finite.h>
+ #include <limits.h>
+-#include <libm-alias-float.h>
+-#include <math-svid-compat.h>
+ #include <math-narrow-eval.h>
+ #include "math_config.h"
+ 
+@@ -110,7 +108,7 @@ as_ln (double x)
+ }
+ 
+ float
+-__lgammaf_r (float x, int *signgamp)
++__ieee754_lgammaf_r (float x, int *signgamp)
+ {
+   static const struct
+   {
+@@ -163,7 +161,7 @@ __lgammaf_r (float x, int *signgamp)
+       if (x <= 0.0f)
+ 	{
+ 	  *signgamp = asuint (x) >> 31 ? -1 : 1;
+-	  return __math_divzerof (0);
++	  return 1.0f / 0.0f;
+ 	}
+       if (x == 1.0f || x == 2.0f)
+ 	{
+@@ -208,11 +206,10 @@ __lgammaf_r (float x, int *signgamp)
+       if (ax > 0x1.afc1ap+1f)
+ 	{
+ 	  if (__glibc_unlikely (x > 0x1.895f1cp+121f))
+-	    return __math_oflowf (0);
+-
++	    return math_narrow_eval (0x1p127f * 0x1p127f);
+ 	  /* |x|>=2**23, must be -integer */
+ 	  if (__glibc_unlikely (x < 0.0f && ax > 0x1p+23f))
+-	    return __math_divzerof (0);
++	    return ax / 0.0f;
+ 	  double lz = as_ln (z);
+ 	  f = (z - 0.5) * (lz - 1) + 0x1.acfe390c97d69p-2;
+ 	  if (ax < 0x1.0p+20f)
+@@ -274,7 +271,7 @@ __lgammaf_r (float x, int *signgamp)
+ 	    {
+ 	      int ni = floorf (-2 * x);
+ 	      if ((ni & 1) == 0 && ni == -2 * x)
+-		return __math_divzerof (0);
++		return 1.0f / 0.0f;
+ 	    }
+ 	  const double c0 = 0x1.3cc0e6a0106b3p+2;
+ 	  static const double rd[] =
+@@ -366,13 +363,4 @@ __lgammaf_r (float x, int *signgamp)
+     }
+   return r;
+ }
+-strong_alias (__lgammaf_r, __ieee754_lgammaf_r)
+-libm_alias_finite (__lgammaf_r, __lgammaf_r)
+-#if LIBM_SVID_COMPAT
+-versioned_symbol (libm, __lgammaf_r, lgammaf_r, GLIBC_2_43);
+-# if __HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32
+-weak_alias (__lgammaf_r, lgammaf32_r)
+-# endif
+-#else
+-libm_alias_float_r (__lgamma, lgamma, _r)
+-#endif
++libm_alias_finite (__ieee754_lgammaf_r, __lgammaf_r)
+diff --git a/sysdeps/ieee754/flt-32/w_lgammaf.c b/sysdeps/ieee754/flt-32/w_lgammaf.c
+deleted file mode 100644
+index 5fc9b46866..0000000000
+--- a/sysdeps/ieee754/flt-32/w_lgammaf.c
++++ /dev/null
+@@ -1,17 +0,0 @@
+-#include <math-svid-compat.h>
+-#include <math.h>
+-#include <libm-alias-float.h>
+-
+-float
+-__lgammaf (float x)
+-{
+-  return __lgammaf_r (x, &__signgam);
+-}
+-#if LIBM_SVID_COMPAT
+-versioned_symbol (libm, __lgammaf, lgammaf, GLIBC_2_43);
+-libm_alias_float_other (__lgamma, lgamma)
+-#else
+-libm_alias_float (__lgamma, lgamma)
+-strong_alias (__lgammaf, __gammaf)
+-weak_alias (__gammaf, gammaf)
+-#endif
+diff --git a/sysdeps/ieee754/flt-32/w_lgammaf_r.c b/sysdeps/ieee754/flt-32/w_lgammaf_r.c
+deleted file mode 100644
+index 1cc8931700..0000000000
+--- a/sysdeps/ieee754/flt-32/w_lgammaf_r.c
++++ /dev/null
+@@ -1 +0,0 @@
+-/* Not needed.  */
+diff --git a/sysdeps/mach/hurd/i386/libm.abilist b/sysdeps/mach/hurd/i386/libm.abilist
+index 20da811584..2cf4849b49 100644
+--- a/sysdeps/mach/hurd/i386/libm.abilist
++++ b/sysdeps/mach/hurd/i386/libm.abilist
+@@ -1328,8 +1328,6 @@ GLIBC_2.43 fmodf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/aarch64/libm.abilist b/sysdeps/unix/sysv/linux/aarch64/libm.abilist
+index 17a71db73d..f851b41aef 100644
+--- a/sysdeps/unix/sysv/linux/aarch64/libm.abilist
++++ b/sysdeps/unix/sysv/linux/aarch64/libm.abilist
+@@ -1294,8 +1294,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/alpha/libm.abilist b/sysdeps/unix/sysv/linux/alpha/libm.abilist
+index ec439daa5d..06a8f0f60f 100644
+--- a/sysdeps/unix/sysv/linux/alpha/libm.abilist
++++ b/sysdeps/unix/sysv/linux/alpha/libm.abilist
+@@ -1453,8 +1453,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/arm/be/libm.abilist b/sysdeps/unix/sysv/linux/arm/be/libm.abilist
+index 24e1adc4b5..06fc039ee6 100644
+--- a/sysdeps/unix/sysv/linux/arm/be/libm.abilist
++++ b/sysdeps/unix/sysv/linux/arm/be/libm.abilist
+@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/arm/le/libm.abilist b/sysdeps/unix/sysv/linux/arm/le/libm.abilist
+index 24e1adc4b5..06fc039ee6 100644
+--- a/sysdeps/unix/sysv/linux/arm/le/libm.abilist
++++ b/sysdeps/unix/sysv/linux/arm/le/libm.abilist
+@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/hppa/libm.abilist b/sysdeps/unix/sysv/linux/hppa/libm.abilist
+index b8e75bce1e..6adc9237e3 100644
+--- a/sysdeps/unix/sysv/linux/hppa/libm.abilist
++++ b/sysdeps/unix/sysv/linux/hppa/libm.abilist
+@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/i386/libm.abilist b/sysdeps/unix/sysv/linux/i386/libm.abilist
+index 6d0400dcc1..4c844774eb 100644
+--- a/sysdeps/unix/sysv/linux/i386/libm.abilist
++++ b/sysdeps/unix/sysv/linux/i386/libm.abilist
+@@ -1335,8 +1335,6 @@ GLIBC_2.43 fmodf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist b/sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist
+index 24e1adc4b5..06fc039ee6 100644
+--- a/sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist
++++ b/sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist
+@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist b/sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist
+index fcb3e6f369..30f5fea139 100644
+--- a/sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist
++++ b/sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist
+@@ -992,8 +992,6 @@ GLIBC_2.43 fmodf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+ GLIBC_2.43 sqrtf F
+diff --git a/sysdeps/unix/sysv/linux/microblaze/be/libm.abilist b/sysdeps/unix/sysv/linux/microblaze/be/libm.abilist
+index 06c935c595..cae1738eea 100644
+--- a/sysdeps/unix/sysv/linux/microblaze/be/libm.abilist
++++ b/sysdeps/unix/sysv/linux/microblaze/be/libm.abilist
+@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/microblaze/le/libm.abilist b/sysdeps/unix/sysv/linux/microblaze/le/libm.abilist
+index 06c935c595..cae1738eea 100644
+--- a/sysdeps/unix/sysv/linux/microblaze/le/libm.abilist
++++ b/sysdeps/unix/sysv/linux/microblaze/le/libm.abilist
+@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/mips/mips32/libm.abilist b/sysdeps/unix/sysv/linux/mips/mips32/libm.abilist
+index ac514efdcd..9fec2ed29a 100644
+--- a/sysdeps/unix/sysv/linux/mips/mips32/libm.abilist
++++ b/sysdeps/unix/sysv/linux/mips/mips32/libm.abilist
+@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/mips/mips64/libm.abilist b/sysdeps/unix/sysv/linux/mips/mips64/libm.abilist
+index 713065cd65..86d05a824b 100644
+--- a/sysdeps/unix/sysv/linux/mips/mips64/libm.abilist
++++ b/sysdeps/unix/sysv/linux/mips/mips64/libm.abilist
+@@ -1294,8 +1294,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist
+index 64af459283..e5d427a8b3 100644
+--- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist
++++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist
+@@ -1106,8 +1106,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist
+index c9b6b2be85..ea7f344385 100644
+--- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist
++++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist
+@@ -1105,8 +1105,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libm.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libm.abilist
+index a7a949ec86..23518e8fea 100644
+--- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libm.abilist
++++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libm.abilist
+@@ -1099,8 +1099,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libm.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libm.abilist
+index 5f6dd0a606..dd42b1ebc7 100644
+--- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libm.abilist
++++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libm.abilist
+@@ -1483,8 +1483,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist b/sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist
+index 9c3a54a6db..bf247c70f6 100644
+--- a/sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist
++++ b/sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist
+@@ -1397,8 +1397,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist b/sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist
+index 0c6fd6ef65..e17eca0fd2 100644
+--- a/sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist
++++ b/sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist
+@@ -1397,8 +1397,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/sh/be/libm.abilist b/sysdeps/unix/sysv/linux/sh/be/libm.abilist
+index 24c81ef25a..e8885a9190 100644
+--- a/sysdeps/unix/sysv/linux/sh/be/libm.abilist
++++ b/sysdeps/unix/sysv/linux/sh/be/libm.abilist
+@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/sh/le/libm.abilist b/sysdeps/unix/sysv/linux/sh/le/libm.abilist
+index 24c81ef25a..e8885a9190 100644
+--- a/sysdeps/unix/sysv/linux/sh/le/libm.abilist
++++ b/sysdeps/unix/sysv/linux/sh/le/libm.abilist
+@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist b/sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist
+index 064ca0f7c6..17dcfe15e5 100644
+--- a/sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist
++++ b/sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist
+@@ -1404,8 +1404,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist b/sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist
+index a5717fe546..25072592bc 100644
+--- a/sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist
++++ b/sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist
+@@ -1294,8 +1294,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/x86_64/64/libm.abilist b/sysdeps/unix/sysv/linux/x86_64/64/libm.abilist
+index d3dff0e42b..c5c057bfaf 100644
+--- a/sysdeps/unix/sysv/linux/x86_64/64/libm.abilist
++++ b/sysdeps/unix/sysv/linux/x86_64/64/libm.abilist
+@@ -1327,8 +1327,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+diff --git a/sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist b/sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist
+index 387d97597e..7963b913ef 100644
+--- a/sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist
++++ b/sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist
+@@ -1327,8 +1327,6 @@ GLIBC_2.43 coshf F
+ GLIBC_2.43 j0f F
+ GLIBC_2.43 j1f F
+ GLIBC_2.43 jnf F
+-GLIBC_2.43 lgammaf F
+-GLIBC_2.43 lgammaf_r F
+ GLIBC_2.43 log10f F
+ GLIBC_2.43 remainder F
+ GLIBC_2.43 remainderf F
+-- 
+2.25.1
+

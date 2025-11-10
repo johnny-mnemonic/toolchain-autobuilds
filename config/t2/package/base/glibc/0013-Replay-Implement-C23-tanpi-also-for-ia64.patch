@@ -1,7 +1,7 @@
-From 103992972dbd92f05a300cc1918960cf42c0c6d1 Mon Sep 17 00:00:00 2001
+From ba4e0ff0daf537e9198deb479b656015f42bb640 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 11 Dec 2024 22:57:18 +0100
-Subject: [PATCH 13/34] Replay "Implement C23 tanpi" also for ia64
+Subject: [PATCH 13/35] Replay "Implement C23 tanpi" also for ia64
 
 See f9e90e4b4ce71f88470c8c8b0a16c21088294be4 for reference.
 ---
