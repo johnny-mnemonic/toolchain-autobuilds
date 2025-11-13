@@ -1,7 +1,7 @@
-From 4f7e091a19ea7f331a211dc16f13e99995661752 Mon Sep 17 00:00:00 2001
+From a571b33b4d871c34f94248fb50cc80889883c723 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Mon, 10 Nov 2025 21:36:17 +0100
-Subject: [PATCH 34/35] Revert "math: Remove the SVID error handling from
+Subject: [PATCH 34/36] Revert "math: Remove the SVID error handling from
  lgammaf/lgammaf_r"
 
 This reverts commit de0e623434fcce907a5be8cc386c95d6b07ba408.
@@ -58,7 +58,7 @@ it instead for the time being.
  delete mode 100644 sysdeps/ieee754/flt-32/w_lgammaf_r.c
 
 diff --git a/math/Versions b/math/Versions
-index d6ad34f459..69aa19c5c4 100644
+index d04ac92324..cdb48b7bb2 100644
 --- a/math/Versions
 +++ b/math/Versions
 @@ -697,8 +697,6 @@ libm {
@@ -265,10 +265,10 @@ index 1cc8931700..0000000000
 @@ -1 +0,0 @@
 -/* Not needed.  */
 diff --git a/sysdeps/mach/hurd/i386/libm.abilist b/sysdeps/mach/hurd/i386/libm.abilist
-index 20da811584..2cf4849b49 100644
+index a1b21698f6..5425d61fd2 100644
 --- a/sysdeps/mach/hurd/i386/libm.abilist
 +++ b/sysdeps/mach/hurd/i386/libm.abilist
-@@ -1328,8 +1328,6 @@ GLIBC_2.43 fmodf F
+@@ -1344,8 +1344,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -278,10 +278,10 @@ index 20da811584..2cf4849b49 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/aarch64/libm.abilist b/sysdeps/unix/sysv/linux/aarch64/libm.abilist
-index 17a71db73d..f851b41aef 100644
+index 23c1817085..5045c53bd2 100644
 --- a/sysdeps/unix/sysv/linux/aarch64/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/aarch64/libm.abilist
-@@ -1294,8 +1294,6 @@ GLIBC_2.43 coshf F
+@@ -1310,8 +1310,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -291,10 +291,10 @@ index 17a71db73d..f851b41aef 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/alpha/libm.abilist b/sysdeps/unix/sysv/linux/alpha/libm.abilist
-index ec439daa5d..06a8f0f60f 100644
+index eaffa43b6c..4dc331c14e 100644
 --- a/sysdeps/unix/sysv/linux/alpha/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/alpha/libm.abilist
-@@ -1453,8 +1453,6 @@ GLIBC_2.43 coshf F
+@@ -1469,8 +1469,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -304,10 +304,10 @@ index ec439daa5d..06a8f0f60f 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/arm/be/libm.abilist b/sysdeps/unix/sysv/linux/arm/be/libm.abilist
-index 24e1adc4b5..06fc039ee6 100644
+index 6f2f3282d8..3e9085ee8e 100644
 --- a/sysdeps/unix/sysv/linux/arm/be/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/arm/be/libm.abilist
-@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+@@ -971,8 +971,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -317,10 +317,10 @@ index 24e1adc4b5..06fc039ee6 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/arm/le/libm.abilist b/sysdeps/unix/sysv/linux/arm/le/libm.abilist
-index 24e1adc4b5..06fc039ee6 100644
+index 6f2f3282d8..3e9085ee8e 100644
 --- a/sysdeps/unix/sysv/linux/arm/le/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/arm/le/libm.abilist
-@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+@@ -971,8 +971,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -330,10 +330,10 @@ index 24e1adc4b5..06fc039ee6 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/hppa/libm.abilist b/sysdeps/unix/sysv/linux/hppa/libm.abilist
-index b8e75bce1e..6adc9237e3 100644
+index a2d8a6bcba..50ec515f97 100644
 --- a/sysdeps/unix/sysv/linux/hppa/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/hppa/libm.abilist
-@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+@@ -971,8 +971,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -343,10 +343,10 @@ index b8e75bce1e..6adc9237e3 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/i386/libm.abilist b/sysdeps/unix/sysv/linux/i386/libm.abilist
-index 6d0400dcc1..4c844774eb 100644
+index 4369ca51bb..93dae6ed0e 100644
 --- a/sysdeps/unix/sysv/linux/i386/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/i386/libm.abilist
-@@ -1335,8 +1335,6 @@ GLIBC_2.43 fmodf F
+@@ -1351,8 +1351,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -356,10 +356,10 @@ index 6d0400dcc1..4c844774eb 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist b/sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist
-index 24e1adc4b5..06fc039ee6 100644
+index 6f2f3282d8..3e9085ee8e 100644
 --- a/sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist
-@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+@@ -971,8 +971,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -369,10 +369,10 @@ index 24e1adc4b5..06fc039ee6 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist b/sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist
-index fcb3e6f369..30f5fea139 100644
+index cc4d60009f..84b797cd16 100644
 --- a/sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist
-@@ -992,8 +992,6 @@ GLIBC_2.43 fmodf F
+@@ -1004,8 +1004,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -382,10 +382,10 @@ index fcb3e6f369..30f5fea139 100644
  GLIBC_2.43 remainderf F
  GLIBC_2.43 sqrtf F
 diff --git a/sysdeps/unix/sysv/linux/microblaze/be/libm.abilist b/sysdeps/unix/sysv/linux/microblaze/be/libm.abilist
-index 06c935c595..cae1738eea 100644
+index b864d6b242..1d6f541f78 100644
 --- a/sysdeps/unix/sysv/linux/microblaze/be/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/microblaze/be/libm.abilist
-@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+@@ -971,8 +971,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -395,10 +395,10 @@ index 06c935c595..cae1738eea 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/microblaze/le/libm.abilist b/sysdeps/unix/sysv/linux/microblaze/le/libm.abilist
-index 06c935c595..cae1738eea 100644
+index b864d6b242..1d6f541f78 100644
 --- a/sysdeps/unix/sysv/linux/microblaze/le/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/microblaze/le/libm.abilist
-@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+@@ -971,8 +971,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -408,10 +408,10 @@ index 06c935c595..cae1738eea 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips32/libm.abilist b/sysdeps/unix/sysv/linux/mips/mips32/libm.abilist
-index ac514efdcd..9fec2ed29a 100644
+index cba91a3c60..6440347a6d 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips32/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips32/libm.abilist
-@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+@@ -971,8 +971,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -421,10 +421,10 @@ index ac514efdcd..9fec2ed29a 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips64/libm.abilist b/sysdeps/unix/sysv/linux/mips/mips64/libm.abilist
-index 713065cd65..86d05a824b 100644
+index d5dd941186..2109a7c3c0 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips64/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips64/libm.abilist
-@@ -1294,8 +1294,6 @@ GLIBC_2.43 coshf F
+@@ -1310,8 +1310,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -434,10 +434,10 @@ index 713065cd65..86d05a824b 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist
-index 64af459283..e5d427a8b3 100644
+index fcde397e30..5b8e9082af 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist
-@@ -1106,8 +1106,6 @@ GLIBC_2.43 coshf F
+@@ -1118,8 +1118,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -447,10 +447,10 @@ index 64af459283..e5d427a8b3 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist
-index c9b6b2be85..ea7f344385 100644
+index c5af9a8ee8..9385425c54 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist
-@@ -1105,8 +1105,6 @@ GLIBC_2.43 coshf F
+@@ -1117,8 +1117,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -460,10 +460,10 @@ index c9b6b2be85..ea7f344385 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libm.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libm.abilist
-index a7a949ec86..23518e8fea 100644
+index 456135f1b7..c9442c5f70 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libm.abilist
-@@ -1099,8 +1099,6 @@ GLIBC_2.43 coshf F
+@@ -1111,8 +1111,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -473,10 +473,10 @@ index a7a949ec86..23518e8fea 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libm.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libm.abilist
-index 5f6dd0a606..dd42b1ebc7 100644
+index 2347726e1c..4f33f6e36c 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libm.abilist
-@@ -1483,8 +1483,6 @@ GLIBC_2.43 coshf F
+@@ -1503,8 +1503,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -486,10 +486,10 @@ index 5f6dd0a606..dd42b1ebc7 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist b/sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist
-index 9c3a54a6db..bf247c70f6 100644
+index a3458a17f4..ee0842dbdc 100644
 --- a/sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist
-@@ -1397,8 +1397,6 @@ GLIBC_2.43 coshf F
+@@ -1413,8 +1413,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -499,10 +499,10 @@ index 9c3a54a6db..bf247c70f6 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist b/sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist
-index 0c6fd6ef65..e17eca0fd2 100644
+index 8a2d012dbd..475e6f2669 100644
 --- a/sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist
-@@ -1397,8 +1397,6 @@ GLIBC_2.43 coshf F
+@@ -1413,8 +1413,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -512,10 +512,10 @@ index 0c6fd6ef65..e17eca0fd2 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/sh/be/libm.abilist b/sysdeps/unix/sysv/linux/sh/be/libm.abilist
-index 24c81ef25a..e8885a9190 100644
+index d458c8721d..f06a929250 100644
 --- a/sysdeps/unix/sysv/linux/sh/be/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/sh/be/libm.abilist
-@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+@@ -971,8 +971,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -525,10 +525,10 @@ index 24c81ef25a..e8885a9190 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/sh/le/libm.abilist b/sysdeps/unix/sysv/linux/sh/le/libm.abilist
-index 24c81ef25a..e8885a9190 100644
+index d458c8721d..f06a929250 100644
 --- a/sysdeps/unix/sysv/linux/sh/le/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/sh/le/libm.abilist
-@@ -959,8 +959,6 @@ GLIBC_2.43 coshf F
+@@ -971,8 +971,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -538,10 +538,10 @@ index 24c81ef25a..e8885a9190 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist b/sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist
-index 064ca0f7c6..17dcfe15e5 100644
+index cac2d2e914..54c28f550b 100644
 --- a/sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist
-@@ -1404,8 +1404,6 @@ GLIBC_2.43 coshf F
+@@ -1420,8 +1420,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -551,10 +551,10 @@ index 064ca0f7c6..17dcfe15e5 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist b/sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist
-index a5717fe546..25072592bc 100644
+index 22c8949912..10f8f8855a 100644
 --- a/sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist
-@@ -1294,8 +1294,6 @@ GLIBC_2.43 coshf F
+@@ -1310,8 +1310,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -564,10 +564,10 @@ index a5717fe546..25072592bc 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/x86_64/64/libm.abilist b/sysdeps/unix/sysv/linux/x86_64/64/libm.abilist
-index d3dff0e42b..c5c057bfaf 100644
+index b18629845e..1f0ef63bcd 100644
 --- a/sysdeps/unix/sysv/linux/x86_64/64/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/x86_64/64/libm.abilist
-@@ -1327,8 +1327,6 @@ GLIBC_2.43 coshf F
+@@ -1343,8 +1343,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F
@@ -577,10 +577,10 @@ index d3dff0e42b..c5c057bfaf 100644
  GLIBC_2.43 remainder F
  GLIBC_2.43 remainderf F
 diff --git a/sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist b/sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist
-index 387d97597e..7963b913ef 100644
+index 02e991c07f..22ebd7ea4c 100644
 --- a/sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist
 +++ b/sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist
-@@ -1327,8 +1327,6 @@ GLIBC_2.43 coshf F
+@@ -1343,8 +1343,6 @@ GLIBC_2.43 fromfpxl F
  GLIBC_2.43 j0f F
  GLIBC_2.43 j1f F
  GLIBC_2.43 jnf F

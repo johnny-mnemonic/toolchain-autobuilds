@@ -1,7 +1,7 @@
-From cd38fd41d33a11a02723c310fe58afcd09aad776 Mon Sep 17 00:00:00 2001
+From 7587a7fac118291cf68f07e3269fddce09785474 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Fri, 14 Feb 2025 00:17:46 +0100
-Subject: [PATCH 25/35] Fix symbol visibility for "round"
+Subject: [PATCH 25/36] Fix symbol visibility for "round"
 
 Fixes #9.
 ---
