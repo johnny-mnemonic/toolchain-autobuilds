@@ -1,0 +1,358 @@
+From 90f6cbc4c18b554f038d0131ea56f541dafcfa03 Mon Sep 17 00:00:00 2001
+From: Frank Scheiner <frank.scheiner@web.de>
+Date: Wed, 26 Nov 2025 16:13:52 +0100
+Subject: [PATCH] Fix build warnings after glibc@cd748a6
+
+Since glibc after "Implement C23 const-preserving standard library macros"
+strchr() and related functions return a pointer to a const char.
+
+[glibc@cd748a6]: https://sourceware.org/git/?p=glibc.git;a=commit;h=cd748a63ab1a7ae846175c532a3daab341c62690
+
+This leads to various warnings when building binutils, e.g. like the
+following warning:
+```
+../../bfd/bfd.c:1063:23: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+ 1063 |           char *end = strchr (ptr, '%');
+      |                       ^~~~~~
+```
+...as detected by our toolchain autobuilds for ia64 ([1]).
+
+[1]: https://github.com/johnny-mnemonic/toolchain-autobuilds/actions/runs/19691858976
+
+Fix this by making the respective pointers point to const char instead.
+
+This also required additional changes in:
+* bfd/targets.c, so character changes happen in the non-const character
+  array "new_tname" instead of via the "hyp" pointer to const char
+* binutils/prdbg.c, so character changes happen in the non-const character
+  array "dname" instead of "name"
+* ld/ldelf.c, so character changes happen in the non-const character array
+  "freeme" instead of "replacement"
+
+Signed-off-by: Frank Scheiner <frank.scheiner@web.de>
+---
+ bfd/bfd.c            |  2 +-
+ bfd/elflink.c        | 31 ++++++++++++++++---------------
+ bfd/targets.c        |  4 ++--
+ binutils/addr2line.c |  2 +-
+ binutils/nm.c        |  2 +-
+ binutils/prdbg.c     | 13 +++++++------
+ gas/read.c           |  2 +-
+ gprof/source.c       |  3 ++-
+ ld/ldelf.c           |  8 ++++----
+ ld/ldlang.c          |  2 +-
+ opcodes/ia64-opc.c   |  2 +-
+ 11 files changed, 37 insertions(+), 34 deletions(-)
+
+diff --git a/bfd/bfd.c b/bfd/bfd.c
+index 11ce75669d3..4fa8fdd029f 100644
+--- a/bfd/bfd.c
++++ b/bfd/bfd.c
+@@ -1060,7 +1060,7 @@ _bfd_doprnt (bfd_print_callback print, void *stream, const char *format,
+       if (*ptr != '%')
+ 	{
+ 	  /* While we have regular characters, print them.  */
+-	  char *end = strchr (ptr, '%');
++	  const char *end = strchr (ptr, '%');
+ 	  if (end != NULL)
+ 	    result = print (stream, "%.*s", (int) (end - ptr), ptr);
+ 	  else
+diff --git a/bfd/elflink.c b/bfd/elflink.c
+index ec34c8abcf7..27924e4ad6c 100644
+--- a/bfd/elflink.c
++++ b/bfd/elflink.c
+@@ -596,8 +596,7 @@ bfd_elf_link_record_dynamic_symbol (struct bfd_link_info *info,
+   if (h->dynindx == -1)
+     {
+       struct elf_strtab_hash *dynstr;
+-      char *p;
+-      const char *name;
++      const char *p, *name;
+       size_t indx;
+ 
+       if (h->root.type == bfd_link_hash_defined
+@@ -726,7 +725,7 @@ bfd_elf_record_link_assignment (bfd *output_bfd,
+   if (h->versioned == unknown)
+     {
+       /* Set versioned if symbol version is unknown.  */
+-      char *version = strrchr (name, ELF_VER_CHR);
++      const char *version = strrchr (name, ELF_VER_CHR);
+       if (version)
+ 	{
+ 	  if (version > name && version[-1] != ELF_VER_CHR)
+@@ -1160,7 +1159,7 @@ _bfd_elf_merge_symbol (bfd *abfd,
+   bool newdyn, olddyn, olddef, newdef, newdyncommon, olddyncommon;
+   bool newweak, oldweak, newfunc, oldfunc;
+   const struct elf_backend_data *bed;
+-  char *new_version;
++  const char *new_version;
+   bool default_sym = *matched;
+   struct elf_link_hash_table *htab;
+ 
+@@ -1232,7 +1231,7 @@ _bfd_elf_merge_symbol (bfd *abfd,
+ 	    {
+ 	      /* OLD_VERSION is the symbol version of the existing
+ 		 symbol. */
+-	      char *old_version;
++	      const char *old_version;
+ 
+ 	      if (h->versioned >= versioned)
+ 		old_version = strrchr (h->root.root.string,
+@@ -1958,7 +1957,7 @@ _bfd_elf_add_default_symbol (bfd *abfd,
+   bool collect;
+   bool dynamic;
+   bfd *override;
+-  char *p;
++  const char *p;
+   size_t len, shortlen;
+   asection *tmp_sec;
+   bool matched;
+@@ -2650,7 +2649,7 @@ _bfd_elf_link_assign_sym_version (struct elf_link_hash_entry *h, void *data)
+   struct bfd_link_info *info;
+   const struct elf_backend_data *bed;
+   struct elf_info_failed eif;
+-  char *p;
++  const char *p;
+   bool hide;
+ 
+   sinfo = (struct elf_info_failed *) data;
+@@ -5655,7 +5654,7 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
+ 	      && !dynamic
+ 	      && (abfd->flags & BFD_PLUGIN) == 0)
+ 	    {
+-	      char *p = strchr (name, ELF_VER_CHR);
++	      const char *p = strchr (name, ELF_VER_CHR);
+ 	      if (p != NULL && p[1] != ELF_VER_CHR)
+ 		{
+ 		  /* Queue non-default versions so that .symver x, x@FOO
+@@ -5905,7 +5904,8 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
+       for (cnt = 0; cnt < nondeflt_vers_cnt; ++cnt)
+ 	{
+ 	  struct elf_link_hash_entry *h = nondeflt_vers[cnt], *hi;
+-	  char *shortname, *p;
++	  char *shortname;
++	  const char *p;
+ 	  size_t amt;
+ 
+ 	  p = strchr (h->root.root.string, ELF_VER_CHR);
+@@ -6177,7 +6177,8 @@ _bfd_elf_archive_symbol_lookup (bfd *abfd,
+ 				const char *name)
+ {
+   struct bfd_link_hash_entry *h;
+-  char *p, *copy;
++  const char *p;
++  char *copy;
+   size_t len, first;
+ 
+   h = bfd_link_hash_lookup (info->hash, name, false, false, true);
+@@ -6472,7 +6473,7 @@ elf_collect_hash_codes (struct elf_link_hash_entry *h, void *data)
+   name = h->root.root.string;
+   if (h->versioned >= versioned)
+     {
+-      char *p = strchr (name, ELF_VER_CHR);
++      const char *p = strchr (name, ELF_VER_CHR);
+       if (p != NULL)
+ 	{
+ 	  alc = (char *) bfd_malloc (p - name + 1);
+@@ -6545,7 +6546,7 @@ elf_collect_gnu_hash_codes (struct elf_link_hash_entry *h, void *data)
+   name = h->root.root.string;
+   if (h->versioned >= versioned)
+     {
+-      char *p = strchr (name, ELF_VER_CHR);
++      const char *p = strchr (name, ELF_VER_CHR);
+       if (p != NULL)
+ 	{
+ 	  alc = (char *) bfd_malloc (p - name + 1);
+@@ -10342,8 +10343,8 @@ elf_link_output_symstrtab (void *finf,
+ 	    {
+ 	      /* Keep only one '@' for versioned symbols defined in
+ 	         shared objects.  */
+-	      char *version = strrchr (name, ELF_VER_CHR);
+-	      char *base_end = strchr (name, ELF_VER_CHR);
++	      const char *version = strrchr (name, ELF_VER_CHR);
++	      const char *base_end = strchr (name, ELF_VER_CHR);
+ 	      if (version != base_end)
+ 		{
+ 		  size_t base_len;
+@@ -11082,7 +11083,7 @@ elf_link_output_extsym (struct bfd_hash_entry *bh, void *data)
+ 	      || h->ref_dynamic
+ 	      || !h->def_regular))
+ 	{
+-	  char *p = strrchr (h->root.root.string, ELF_VER_CHR);
++	  const char *p = strrchr (h->root.root.string, ELF_VER_CHR);
+ 
+ 	  if (p && p [1] != '\0')
+ 	    {
+diff --git a/bfd/targets.c b/bfd/targets.c
+index 4ac70921c35..f5a463c85e1 100644
+--- a/bfd/targets.c
++++ b/bfd/targets.c
+@@ -1664,7 +1664,7 @@ bfd_get_target_info (const char *target_name, bfd *abfd,
+ 
+       if (arches && tname)
+ 	{
+-	  char *hyp = strchr (tname, '-');
++	  const char *hyp = strchr (tname, '-');
+ 
+ 	  if (hyp != NULL)
+ 	    {
+@@ -1679,7 +1679,7 @@ bfd_get_target_info (const char *target_name, bfd *abfd,
+ 		  strcpy (new_tname, hyp);
+ 		  while ((hyp = strrchr (new_tname, '-')) != NULL)
+ 		    {
+-		      *hyp = 0;
++		      new_tname [hyp - new_tname] = 0;
+ 		      if (_bfd_find_arch_match (new_tname, arches,
+ 						def_target_arch))
+ 			break;
+diff --git a/binutils/addr2line.c b/binutils/addr2line.c
+index d686fa7bbae..e147460f93b 100644
+--- a/binutils/addr2line.c
++++ b/binutils/addr2line.c
+@@ -385,7 +385,7 @@ translate_addresses (bfd *abfd, asection *section)
+ 
+               if (base_names && filename != NULL)
+                 {
+-                  char *h;
++                  const char *h;
+ 
+                   h = strrchr (filename, '/');
+                   if (h != NULL)
+diff --git a/binutils/nm.c b/binutils/nm.c
+index 4ea5c1190e7..767bfdbe1b5 100644
+--- a/binutils/nm.c
++++ b/binutils/nm.c
+@@ -686,7 +686,7 @@ print_symname (const char *form, struct extended_symbol_info *info,
+   if (!with_symbol_versions
+       && bfd_get_flavour (abfd) == bfd_target_elf_flavour)
+     {
+-      char *atver = strchr (name, '@');
++      const char *atver = strchr (name, '@');
+ 
+       if (atver)
+ 	{
+diff --git a/binutils/prdbg.c b/binutils/prdbg.c
+index 5d405c48e3d..77aba67618f 100644
+--- a/binutils/prdbg.c
++++ b/binutils/prdbg.c
+@@ -2641,23 +2641,24 @@ tg_start_function (void *p, const char *name, bool global)
+   info->stack->method = NULL;
+   if (dname != NULL)
+     {
+-      char *sep;
++      const char *sep;
+       sep = strstr (dname, "::");
+       if (sep)
+ 	{
+ 	  info->stack->method = dname;
+ 	  dname = NULL;
+-	  *sep = 0;
+-	  name = sep + 2;
++	  info->stack->method [sep - info->stack->method] = 0;
++	  dname = sep + 2;
+ 	}
+       else
+ 	{
+ 	  info->stack->method = xstrdup ("");
+-	  name = dname;
+ 	}
+-      sep = strchr (name, '(');
++      sep = strchr (dname, '(');
+       if (sep)
+-	*sep = 0;
++	dname [sep - dname] = 0;
++      name = dname;
++      dname = NULL;
+       /* Obscure functions as type_info function.  */
+     }
+ 
+diff --git a/gas/read.c b/gas/read.c
+index 4ba71f99250..24c6cf01f09 100644
+--- a/gas/read.c
++++ b/gas/read.c
+@@ -867,7 +867,7 @@ find_no_app (const char *s, char next_char)
+ 
+   for (;;)
+     {
+-      char *ends = strstr (s, srch);
++      const char *ends = strstr (s, srch);
+ 
+       if (ends == NULL)
+ 	break;
+diff --git a/gprof/source.c b/gprof/source.c
+index 7ed84a516eb..d6fff2de80e 100644
+--- a/gprof/source.c
++++ b/gprof/source.c
+@@ -98,7 +98,8 @@ annotate_source (Source_File *sf, unsigned int max_width,
+   bool new_line;
+   char buf[8192];
+   char *fname;
+-  char *annotation, *name_only;
++  char *annotation;
++  const char *name_only;
+   FILE *ifp, *ofp;
+   Search_List_Elem *sle = src_search_list.head;
+ 
+diff --git a/ld/ldelf.c b/ld/ldelf.c
+index 03b06ac1425..b09a832ef3a 100644
+--- a/ld/ldelf.c
++++ b/ld/ldelf.c
+@@ -518,7 +518,7 @@ ldelf_search_needed (const char *path, struct dt_needed *n, int force,
+ 
+ 		  if (replacement)
+ 		    {
+-		      char * slash;
++		      const char * slash;
+ 
+ 		      if (replacement[0] == '/')
+ 			freeme = xstrdup (replacement);
+@@ -534,9 +534,9 @@ ldelf_search_needed (const char *path, struct dt_needed *n, int force,
+ 				  replacement, rep_len + 1);
+ 			}
+ 
++		      if ((slash = strrchr (freeme, '/')) != NULL)
++			freeme [slash - freeme] = 0;
+ 		      replacement = freeme;
+-		      if ((slash = strrchr (replacement, '/')) != NULL)
+-			* slash = 0;
+ 		    }
+ 		}
+ 	      break;
+@@ -794,7 +794,7 @@ ldelf_parse_ld_so_conf_include (struct ldelf_ld_so_conf *info,
+ 
+   if (pattern[0] != '/')
+     {
+-      char *p = strrchr (filename, '/');
++      const char *p = strrchr (filename, '/');
+       size_t patlen = strlen (pattern) + 1;
+ 
+       newp = xmalloc (p - filename + 1 + patlen);
+diff --git a/ld/ldlang.c b/ld/ldlang.c
+index 53bbff1f2a6..48950d498bd 100644
+--- a/ld/ldlang.c
++++ b/ld/ldlang.c
+@@ -338,7 +338,7 @@ stat_ldirname (const char *name)
+ static char *
+ archive_path (const char *pattern)
+ {
+-  char *p = NULL;
++  const char *p = NULL;
+ 
+   if (link_info.path_separator == 0)
+     return p;
+diff --git a/opcodes/ia64-opc.c b/opcodes/ia64-opc.c
+index f41442d2435..c54aeab54d4 100644
+--- a/opcodes/ia64-opc.c
++++ b/opcodes/ia64-opc.c
+@@ -66,7 +66,7 @@ const struct ia64_templ_desc ia64_templ_desc[16] =
+ static void
+ get_opc_prefix (const char **ptr, char *dest)
+ {
+-  char *c = strchr (*ptr, '.');
++  const char *c = strchr (*ptr, '.');
+   if (c != NULL)
+     {
+       memcpy (dest, *ptr, c - *ptr);
+-- 
+2.25.1
+
