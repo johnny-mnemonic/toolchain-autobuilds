@@ -33,7 +33,7 @@
 
 [C] base/development
 # FAT-LTO.x86 NO-LTO.clang # also breaks w/ musl?
-[F] OBJDIR CROSS DIETLIBC NO-LTO
+[F] OBJDIR CROSS DIETLIBC NO-LTO NO-SSP.ia64
 
 [L] GPL
 [S] Stable
