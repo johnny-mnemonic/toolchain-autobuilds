@@ -1,7 +1,7 @@
-From d3249373444f9195163d2294fb9c338430d02b15 Mon Sep 17 00:00:00 2001
+From 83563a013ff7008219c4dd319aa2bc4e81a5136e Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sun, 12 Jan 2025 21:30:13 +0100
-Subject: [PATCH 24/36] Introduce __thread_pointer() also for ia64
+Subject: [PATCH 24/38] Introduce __thread_pointer() also for ia64
 
 Related to "Move <thread_pointer.h> to kernel-independent sysdeps
 directories"

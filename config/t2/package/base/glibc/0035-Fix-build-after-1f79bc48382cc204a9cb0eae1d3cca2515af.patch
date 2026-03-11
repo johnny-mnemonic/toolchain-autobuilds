@@ -1,7 +1,7 @@
-From 73795095b288db1fcd5728981b5179ccd935bbe3 Mon Sep 17 00:00:00 2001
+From e9269794861135f73d4bc1639dc6878acbc737d8 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Fri, 14 Nov 2025 01:44:10 +0100
-Subject: [PATCH 35/36] Fix build after
+Subject: [PATCH 35/38] Fix build after
  1f79bc48382cc204a9cb0eae1d3cca2515af1f3c
 
 After this change the build requires definitions for:

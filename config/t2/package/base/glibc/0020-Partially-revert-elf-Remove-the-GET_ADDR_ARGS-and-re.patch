@@ -1,7 +1,7 @@
-From dd3ade497735ebd4a8db43257245acf9687d96f8 Mon Sep 17 00:00:00 2001
+From 357b58f22ab68a8909c84f136bb82ff3c2b8bac7 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 28 Dec 2024 00:21:46 +0100
-Subject: [PATCH 20/36] Partially revert "elf: Remove the GET_ADDR_ARGS and
+Subject: [PATCH 20/38] Partially revert "elf: Remove the GET_ADDR_ARGS and
  related macros [...]"
 
 This partially reverts commit 5e249192cac7354af02a7347a0d8c984e0c88ed3.
@@ -11,14 +11,14 @@ the prior changes.
 
 Fixes #7 for now.
 ---
- elf/dl-tls.c | 59 +++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 38 insertions(+), 21 deletions(-)
+ elf/dl-tls.c | 67 ++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 42 insertions(+), 25 deletions(-)
 
 diff --git a/elf/dl-tls.c b/elf/dl-tls.c
-index 7d815e102f..efe0679001 100644
+index 5bfcb184ed..24372bdfba 100644
 --- a/elf/dl-tls.c
 +++ b/elf/dl-tls.c
-@@ -748,6 +748,23 @@ rtld_hidden_def (_dl_deallocate_tls)
+@@ -772,6 +772,23 @@ rtld_hidden_def (_dl_deallocate_tls)
  
  
  #ifdef SHARED
@@ -42,7 +42,7 @@ index 7d815e102f..efe0679001 100644
  
  /* Allocate one DTV entry.  */
  static struct dtv_pointer
-@@ -946,25 +963,25 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
+@@ -982,25 +999,25 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
  /* Adjust the TLS variable pointer using the TLS descriptor offset and
     the ABI-specific offset.  */
  static inline void *
@@ -72,7 +72,7 @@ index 7d815e102f..efe0679001 100644
        struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
  
        while (idx >= listp->len)
-@@ -1001,35 +1018,35 @@ tls_get_addr_tail (tls_index *ti, dtv_t *dtv, struct link_map *the_map)
+@@ -1037,40 +1054,40 @@ tls_get_addr_tail (tls_index *ti, dtv_t *dtv, struct link_map *the_map)
  #endif
  	  __rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
  
@@ -80,6 +80,12 @@ index 7d815e102f..efe0679001 100644
 -	  dtv[ti->ti_module].pointer.val = p;
 +	  dtv[GET_ADDR_MODULE].pointer.to_free = NULL;
 +	  dtv[GET_ADDR_MODULE].pointer.val = p;
+ 
+ 	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+ 	    _dl_debug_printf ("tls: modid %lu using static TLS; TCB=0x%lx\n",
+-			      (unsigned long int) ti->ti_module,
++			      (unsigned long int) GET_ADDR_MODULE,
+ 			      (unsigned long int) THREAD_SELF);
  
 -	  return tls_get_addr_adjust (p, ti);
 +	  return tls_get_addr_adjust (p, GET_ADDR_PARAM);
@@ -118,7 +124,7 @@ index 7d815e102f..efe0679001 100644
  }
  
  /* For all machines that have a non-macro version of __tls_get_addr, we
-@@ -1038,7 +1055,7 @@ update_get_addr (tls_index *ti, size_t gen)
+@@ -1079,7 +1096,7 @@ update_get_addr (tls_index *ti, size_t gen)
     in ld.so for __tls_get_addr.  */
  
  #ifndef __tls_get_addr
@@ -127,7 +133,7 @@ index 7d815e102f..efe0679001 100644
  rtld_hidden_proto (__tls_get_addr)
  rtld_hidden_def (__tls_get_addr)
  #endif
-@@ -1046,7 +1063,7 @@ rtld_hidden_def (__tls_get_addr)
+@@ -1087,7 +1104,7 @@ rtld_hidden_def (__tls_get_addr)
  /* The generic dynamic and local dynamic model cannot be used in
     statically linked applications.  */
  void *
@@ -136,19 +142,31 @@ index 7d815e102f..efe0679001 100644
  {
    dtv_t *dtv = THREAD_DTV ();
  
-@@ -1058,7 +1075,7 @@ __tls_get_addr (tls_index *ti)
+@@ -1099,7 +1116,7 @@ __tls_get_addr (tls_index *ti)
    if (__glibc_unlikely (dtv[0].counter != gen))
      {
        if (_dl_tls_allocate_active ()
 -	  && ti->ti_module < _dl_tls_initial_modid_limit)
 +	  && GET_ADDR_MODULE < _dl_tls_initial_modid_limit)
+ 	{
  	  /* This is a reentrant __tls_get_addr call, but we can
  	     satisfy it because it's an initially-loaded module ID.
- 	     These TLS slotinfo slots do not change, so the
-@@ -1071,16 +1088,16 @@ __tls_get_addr (tls_index *ti)
- 	  /* Update DTV up to the global generation, see CONCURRENCY NOTES
- 	     in _dl_update_slotinfo.  */
- 	  gen = atomic_load_acquire (&GL(dl_tls_generation));
+@@ -1109,7 +1126,7 @@ __tls_get_addr (tls_index *ti)
+ 	     get off the slow path eventually.  */
+ 	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+ 	    _dl_debug_printf ("tls: modid %lu reentrant usage; TCB=0x%lx\n",
+-			      (unsigned long int) ti->ti_module,
++			      (unsigned long int) GET_ADDR_MODULE,
+ 			      (unsigned long int) THREAD_SELF);
+ 	}
+       else
+@@ -1120,24 +1137,24 @@ __tls_get_addr (tls_index *ti)
+ 	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+ 	    _dl_debug_printf (
+ 		"tls: modid %lu update DTV to generation %lu; TCB=0x%lx\n",
+-		(unsigned long int) ti->ti_module, (unsigned long int) gen,
++		(unsigned long int) GET_ADDR_MODULE, (unsigned long int) gen,
+ 		(unsigned long int) THREAD_SELF);
 -	  return update_get_addr (ti, gen);
 +	  return update_get_addr (GET_ADDR_PARAM, gen);
  	}
@@ -158,8 +176,15 @@ index 7d815e102f..efe0679001 100644
 +  void *p = dtv[GET_ADDR_MODULE].pointer.val;
  
    if (__glibc_unlikely (p == TLS_DTV_UNALLOCATED))
--    return tls_get_addr_tail (ti, dtv, NULL);
-+    return tls_get_addr_tail (GET_ADDR_PARAM, dtv, NULL);
+     {
+       if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+ 	_dl_debug_printf ("tls: modid %lu lazy allocation; TCB=0x%lx\n",
+-			  (unsigned long int) ti->ti_module,
++			  (unsigned long int) GET_ADDR_MODULE,
+ 			  (unsigned long int) THREAD_SELF);
+-      return tls_get_addr_tail (ti, dtv, NULL);
++      return tls_get_addr_tail (GET_ADDR_PARAM, dtv, NULL);
+     }
  
 -  return tls_get_addr_adjust (p, ti);
 +  return tls_get_addr_adjust (p, GET_ADDR_PARAM);

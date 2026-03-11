@@ -1,7 +1,7 @@
-From a571b33b4d871c34f94248fb50cc80889883c723 Mon Sep 17 00:00:00 2001
+From d653762afb8b2267a9ade0d7949a153d6f641624 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Mon, 10 Nov 2025 21:36:17 +0100
-Subject: [PATCH 34/36] Revert "math: Remove the SVID error handling from
+Subject: [PATCH 34/38] Revert "math: Remove the SVID error handling from
  lgammaf/lgammaf_r"
 
 This reverts commit de0e623434fcce907a5be8cc386c95d6b07ba408.
@@ -71,7 +71,7 @@ index d04ac92324..cdb48b7bb2 100644
      remainder;
      remainderf;
 diff --git a/math/lgamma-compat.h b/math/lgamma-compat.h
-index 795e97d5a0..bf4acef559 100644
+index e548127527..0f3bd152b3 100644
 --- a/math/lgamma-compat.h
 +++ b/math/lgamma-compat.h
 @@ -34,17 +34,10 @@

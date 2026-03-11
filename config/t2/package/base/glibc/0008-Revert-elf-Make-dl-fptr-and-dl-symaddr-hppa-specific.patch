@@ -1,7 +1,7 @@
-From ffb1092de07c006f8811842ba6739b7f3473c025 Mon Sep 17 00:00:00 2001
+From c97657eb62b890672ec4fd7f447f89893b9541cc Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Mon, 2 Sep 2024 22:50:09 +0200
-Subject: [PATCH 08/36] Revert "elf: Make dl-fptr and dl-symaddr hppa specific"
+Subject: [PATCH 08/38] Revert "elf: Make dl-fptr and dl-symaddr hppa specific"
 
 This reverts commit 745c3cc10f2d5173a25e3bd4d022d304f4ac9a47.
 ---
@@ -433,7 +433,7 @@ index 0000000000..71cfb62411
 +
 +#endif /* !dl_fptr_h */
 diff --git a/sysdeps/hppa/dl-fptr.h b/sysdeps/hppa/dl-fptr.h
-index 5f16c5b2b8..4d1b9dae0c 100644
+index 901c2097a9..0eff0ec70d 100644
 --- a/sysdeps/hppa/dl-fptr.h
 +++ b/sysdeps/hppa/dl-fptr.h
 @@ -19,28 +19,7 @@
