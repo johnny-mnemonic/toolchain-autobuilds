@@ -1,7 +1,7 @@
-From d78fa18352b12b4d7c3eb5884814012dd602b1b1 Mon Sep 17 00:00:00 2001
+From 4e78bc2105689f2f71b0b86beb554a18bf8a6a75 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sun, 12 Jan 2025 21:01:26 +0100
-Subject: [PATCH 21/38] Replay "elf: Introduce generic <dl-tls.h>" in part also
+Subject: [PATCH 21/39] Replay "elf: Introduce generic <dl-tls.h>" in part also
  for ia64
 
 See ceae7e2770302b04a9f9321b66dc8978c9747bd1 for reference.

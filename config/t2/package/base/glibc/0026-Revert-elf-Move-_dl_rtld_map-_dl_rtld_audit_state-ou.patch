@@ -1,7 +1,7 @@
-From b5342a7fa685535d9102102c22b6a0d183cbf75f Mon Sep 17 00:00:00 2001
+From ffc7e497c8816604e5c8a2992b8bf4dc84b3cc4f Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 12 Mar 2025 22:40:10 +0100
-Subject: [PATCH 26/38] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
+Subject: [PATCH 26/39] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
  out of GL"
 
 This reverts commit ef5823d955dd7e6b4ffed9f3a8455d131cd7a737.

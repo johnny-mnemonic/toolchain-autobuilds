@@ -1,7 +1,7 @@
-From 97f0dd122074aaefcd912c4fce1cc0fcf0b4ee85 Mon Sep 17 00:00:00 2001
+From 202bf8d4c9b7dffcfde8ee197e8891ad4526da0b Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 30 Aug 2025 09:11:03 +0200
-Subject: [PATCH 30/38] Replay "elf: early conversion of elf p_flags to [...]"
+Subject: [PATCH 30/39] Replay "elf: early conversion of elf p_flags to [...]"
  also for ia64
 
 See 3b2b88cceeb79f73a72367800d91599e2af4bb39.
