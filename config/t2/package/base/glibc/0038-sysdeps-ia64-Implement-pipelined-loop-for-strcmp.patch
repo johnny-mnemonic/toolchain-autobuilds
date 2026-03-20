@@ -1,7 +1,7 @@
-From 850b65d24a7bf554231aa10815af8d1f23c3a34b Mon Sep 17 00:00:00 2001
+From 2a7888a31b7969c5895ff3fe3392a6a8d726e282 Mon Sep 17 00:00:00 2001
 From: Tomas Glozar <tglozar@gmail.com>
 Date: Tue, 10 Mar 2026 21:19:49 +0100
-Subject: [PATCH 38/39] sysdeps/ia64: Implement pipelined loop for strcmp
+Subject: [PATCH 38/40] sysdeps/ia64: Implement pipelined loop for strcmp
 
 strcmp is currently implemented with a loop that does two operations
 in sequence: load and compare. This puts it at roughly 2 cycles per

@@ -1,7 +1,7 @@
-From 6c444610ee24418048614198f1f8260ddc7e970c Mon Sep 17 00:00:00 2001
+From 88e6529534aaeb269b833b3d9c21a9d78e38796f Mon Sep 17 00:00:00 2001
 From: Xinhui Yang <cyan@cyano.uk>
 Date: Thu, 25 Sep 2025 22:27:40 +0800
-Subject: [PATCH 33/39] ia64: Increase TCB alignment to 64
+Subject: [PATCH 33/40] ia64: Increase TCB alignment to 64
 
 As of glibc 2.42, the size of `struct pthread' is 1824 bytes, which can
 fit right into the 32-byte boundary, defined by the default
