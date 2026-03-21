@@ -1,7 +1,7 @@
-From 0614912c90f66cd256f4f65c33a4d77dad3db816 Mon Sep 17 00:00:00 2001
+From 084c795bb949b7f786b359b737f2ddf64d4fa979 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Tue, 9 Jul 2024 22:42:12 +0200
-Subject: [PATCH 07/40] Fix ia64 build after
+Subject: [PATCH 07/41] Fix ia64 build after
  7ec903e028271d029818378fd60ddaf6b76b89ac
 
 Fixes #2.

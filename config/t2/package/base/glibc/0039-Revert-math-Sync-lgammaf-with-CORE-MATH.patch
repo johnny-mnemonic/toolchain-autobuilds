@@ -1,7 +1,7 @@
-From b3928731f010abd55cab4ba54d17d90aa4b3c3be Mon Sep 17 00:00:00 2001
+From 607526273b2c45c08d40e8e59adc9f53e27c5cfe Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Fri, 20 Mar 2026 11:19:15 +0100
-Subject: [PATCH 39/40] Revert "math: Sync lgammaf with CORE-MATH"
+Subject: [PATCH 39/41] Revert "math: Sync lgammaf with CORE-MATH"
 
 The reverted commit touched a file (`sysdeps/ieee754/flt-32/e_lgammaf_r.c`)
 already modified by another reverted commit, see Revert "math: Remove
@@ -11,8 +11,8 @@ to the state it had with the just mentioned revert in place.
 This reverts commit e5ef7b3c850c6aa621aa0a0b36540571f647d730.
 ---
  SHARED-FILES                         |  2 +-
- sysdeps/ieee754/flt-32/e_lgammaf_r.c | 37 +++++++++++++++++-----------
- 2 files changed, 24 insertions(+), 15 deletions(-)
+ sysdeps/ieee754/flt-32/e_lgammaf_r.c | 30 +++++++++++++++++-----------
+ 2 files changed, 19 insertions(+), 13 deletions(-)
 
 diff --git a/SHARED-FILES b/SHARED-FILES
 index 5a676e1a48..c3e8e0f5ae 100644
@@ -28,7 +28,7 @@ index 5a676e1a48..c3e8e0f5ae 100644
    # src/binary32/log10/log10f.c, revision ebff4c43
    sysdeps/ieee754/flt-32/e_log10f.c
 diff --git a/sysdeps/ieee754/flt-32/e_lgammaf_r.c b/sysdeps/ieee754/flt-32/e_lgammaf_r.c
-index 9de9c532f1..cddd9d078d 100644
+index e54578f5de..33e710f103 100644
 --- a/sysdeps/ieee754/flt-32/e_lgammaf_r.c
 +++ b/sysdeps/ieee754/flt-32/e_lgammaf_r.c
 @@ -1,10 +1,10 @@
@@ -53,7 +53,7 @@ index 9de9c532f1..cddd9d078d 100644
        if (x <= 0.0f)
  	{
  	  *signgamp = asuint (x) >> 31 ? -1 : 1;
-@@ -202,11 +202,14 @@ __ieee754_lgammaf_r (float x, int *signgamp)
+@@ -202,7 +202,7 @@ __ieee754_lgammaf_r (float x, int *signgamp)
        f = (c0 * s) * as_r8 (s, rn) / as_r8 (s, rd) - as_ln (z);
      }
    else
@@ -61,17 +61,8 @@ index 9de9c532f1..cddd9d078d 100644
 +    {
        if (ax > 0x1.afc1ap+1f)
  	{
--	  if (__glibc_unlikely (x >= 0x1.895f1cp+121f))
--	    return __math_oflowf (0);
-+	  if (__glibc_unlikely (x > 0x1.895f1cp+121f))
-+	    return math_narrow_eval (0x1p127f * 0x1p127f);
-+	  /* |x|>=2**23, must be -integer */
-+	  if (__glibc_unlikely (x < 0.0f && ax > 0x1p+23f))
-+	    return __math_divzerof (0);
- 	  double lz = as_ln (z);
- 	  f = (z - 0.5) * (lz - 1) + 0x1.acfe390c97d69p-2;
- 	  if (ax < 0x1.0p+20f)
-@@ -264,6 +267,12 @@ __ieee754_lgammaf_r (float x, int *signgamp)
+ 	  if (__glibc_unlikely (x >= 0x1.895f1cp+121f))
+@@ -276,6 +276,12 @@ __ieee754_lgammaf_r (float x, int *signgamp)
  	      -0x1.3a6c8295b4445p-1, -0x1.da44e8b810024p-3,
  	      -0x1.9061e81c77e4ap-5
  	    };
@@ -84,7 +75,7 @@ index 9de9c532f1..cddd9d078d 100644
  	  const double c0 = 0x1.3cc0e6a0106b3p+2;
  	  static const double rd[] =
  	    {
-@@ -339,15 +348,15 @@ __ieee754_lgammaf_r (float x, int *signgamp)
+@@ -351,15 +357,15 @@ __ieee754_lgammaf_r (float x, int *signgamp)
    if (__glibc_unlikely (tl <= 31u))
      {
        t = asuint (x);

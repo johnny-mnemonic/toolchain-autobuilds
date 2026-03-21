@@ -1,7 +1,7 @@
-From 1ddc16dbfcecf9de9453ecd13c46d4355fb8522a Mon Sep 17 00:00:00 2001
+From 84f44005a47d7face983bfde870412ab9544f359 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Wed, 12 Mar 2025 22:40:10 +0100
-Subject: [PATCH 26/40] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
+Subject: [PATCH 26/41] Revert "elf: Move _dl_rtld_map, _dl_rtld_audit_state
  out of GL"
 
 This reverts commit ef5823d955dd7e6b4ffed9f3a8455d131cd7a737.
@@ -60,7 +60,7 @@ index 7355eef8e7..5b23e20748 100644
  		  );
  
 diff --git a/elf/rtld.c b/elf/rtld.c
-index e1c2105ba6..23aed51a12 100644
+index 0eac823749..0041cd7dbe 100644
 --- a/elf/rtld.c
 +++ b/elf/rtld.c
 @@ -378,8 +378,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
