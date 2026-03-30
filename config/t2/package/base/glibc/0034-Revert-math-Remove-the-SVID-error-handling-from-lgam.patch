@@ -1,7 +1,7 @@
-From 7af58e37e3d10ae48a76732049d592d6f13b3bd0 Mon Sep 17 00:00:00 2001
+From e5ff111b90be6e689e1bdf317b949f0b8764fd4d Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Mon, 10 Nov 2025 21:36:17 +0100
-Subject: [PATCH 34/41] Revert "math: Remove the SVID error handling from
+Subject: [PATCH 34/43] Revert "math: Remove the SVID error handling from
  lgammaf/lgammaf_r"
 
 This reverts commit de0e623434fcce907a5be8cc386c95d6b07ba408.
@@ -166,7 +166,7 @@ index 524f9901d3..be01b6daac 100644
 +libm_alias_float_r (__lgamma, lgamma, _r)
  #endif
 diff --git a/sysdeps/ieee754/flt-32/e_lgammaf_r.c b/sysdeps/ieee754/flt-32/e_lgammaf_r.c
-index 899f64667b..e54578f5de 100644
+index 15aec67158..cc7611c3f6 100644
 --- a/sysdeps/ieee754/flt-32/e_lgammaf_r.c
 +++ b/sysdeps/ieee754/flt-32/e_lgammaf_r.c
 @@ -36,8 +36,6 @@ SOFTWARE.
@@ -196,7 +196,7 @@ index 899f64667b..e54578f5de 100644
  	}
        if (x == 1.0f || x == 2.0f)
  	{
-@@ -368,13 +366,4 @@ __lgammaf_r (float x, int *signgamp)
+@@ -369,13 +367,4 @@ __lgammaf_r (float x, int *signgamp)
      }
    return r;
  }

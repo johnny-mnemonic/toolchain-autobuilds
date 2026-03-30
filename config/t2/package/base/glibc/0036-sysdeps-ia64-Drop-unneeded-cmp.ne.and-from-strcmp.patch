@@ -1,7 +1,7 @@
-From d5ddc5a35249efa42047760d1fadecb548605fa0 Mon Sep 17 00:00:00 2001
+From 7cdbe4c9cdab028410696de882ff3a97d9d38d51 Mon Sep 17 00:00:00 2001
 From: Tomas Glozar <tglozar@gmail.com>
 Date: Sat, 15 Nov 2025 21:52:11 +0100
-Subject: [PATCH 36/41] sysdeps/ia64: Drop unneeded cmp.ne.and from strcmp
+Subject: [PATCH 36/43] sysdeps/ia64: Drop unneeded cmp.ne.and from strcmp
 
 It is only needed to compare one of val1, val2 against zero, because
 whenever val1 != 0 && val2 == 0, then also val1 != val2.

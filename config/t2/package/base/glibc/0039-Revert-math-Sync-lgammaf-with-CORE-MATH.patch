@@ -1,7 +1,7 @@
-From 607526273b2c45c08d40e8e59adc9f53e27c5cfe Mon Sep 17 00:00:00 2001
+From feb99ab2cbdffcb438acfafc968acde875565f31 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Fri, 20 Mar 2026 11:19:15 +0100
-Subject: [PATCH 39/41] Revert "math: Sync lgammaf with CORE-MATH"
+Subject: [PATCH 39/43] Revert "math: Sync lgammaf with CORE-MATH"
 
 The reverted commit touched a file (`sysdeps/ieee754/flt-32/e_lgammaf_r.c`)
 already modified by another reverted commit, see Revert "math: Remove
@@ -28,7 +28,7 @@ index 5a676e1a48..c3e8e0f5ae 100644
    # src/binary32/log10/log10f.c, revision ebff4c43
    sysdeps/ieee754/flt-32/e_log10f.c
 diff --git a/sysdeps/ieee754/flt-32/e_lgammaf_r.c b/sysdeps/ieee754/flt-32/e_lgammaf_r.c
-index e54578f5de..33e710f103 100644
+index cc7611c3f6..5576035911 100644
 --- a/sysdeps/ieee754/flt-32/e_lgammaf_r.c
 +++ b/sysdeps/ieee754/flt-32/e_lgammaf_r.c
 @@ -1,10 +1,10 @@
@@ -62,7 +62,7 @@ index e54578f5de..33e710f103 100644
        if (ax > 0x1.afc1ap+1f)
  	{
  	  if (__glibc_unlikely (x >= 0x1.895f1cp+121f))
-@@ -276,6 +276,12 @@ __ieee754_lgammaf_r (float x, int *signgamp)
+@@ -277,6 +277,12 @@ __ieee754_lgammaf_r (float x, int *signgamp)
  	      -0x1.3a6c8295b4445p-1, -0x1.da44e8b810024p-3,
  	      -0x1.9061e81c77e4ap-5
  	    };
@@ -75,7 +75,7 @@ index e54578f5de..33e710f103 100644
  	  const double c0 = 0x1.3cc0e6a0106b3p+2;
  	  static const double rd[] =
  	    {
-@@ -351,15 +357,15 @@ __ieee754_lgammaf_r (float x, int *signgamp)
+@@ -352,15 +358,15 @@ __ieee754_lgammaf_r (float x, int *signgamp)
    if (__glibc_unlikely (tl <= 31u))
      {
        t = asuint (x);
