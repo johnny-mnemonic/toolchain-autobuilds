@@ -1,4 +1,4 @@
-From 7cdbe4c9cdab028410696de882ff3a97d9d38d51 Mon Sep 17 00:00:00 2001
+From e4baa461866dcd32cdf6d16000897a413a4e5e1d Mon Sep 17 00:00:00 2001
 From: Tomas Glozar <tglozar@gmail.com>
 Date: Sat, 15 Nov 2025 21:52:11 +0100
 Subject: [PATCH 36/43] sysdeps/ia64: Drop unneeded cmp.ne.and from strcmp

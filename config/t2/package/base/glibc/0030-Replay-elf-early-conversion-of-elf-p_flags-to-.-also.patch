@@ -1,4 +1,4 @@
-From b666fd9cfa60f6f6a827761674c897ad9aa33256 Mon Sep 17 00:00:00 2001
+From 898523c45259a8d204ce2affd920e4d5044dac46 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 30 Aug 2025 09:11:03 +0200
 Subject: [PATCH 30/43] Replay "elf: early conversion of elf p_flags to [...]"

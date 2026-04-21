@@ -1,4 +1,4 @@
-From feb99ab2cbdffcb438acfafc968acde875565f31 Mon Sep 17 00:00:00 2001
+From e792705a5f9847be7f4dc6829ee235143ed81cc9 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Fri, 20 Mar 2026 11:19:15 +0100
 Subject: [PATCH 39/43] Revert "math: Sync lgammaf with CORE-MATH"
@@ -15,10 +15,10 @@ This reverts commit e5ef7b3c850c6aa621aa0a0b36540571f647d730.
  2 files changed, 19 insertions(+), 13 deletions(-)
 
 diff --git a/SHARED-FILES b/SHARED-FILES
-index 5a676e1a48..c3e8e0f5ae 100644
+index 645040d7e1..49652bec26 100644
 --- a/SHARED-FILES
 +++ b/SHARED-FILES
-@@ -272,7 +272,7 @@ core-math:
+@@ -289,7 +289,7 @@ core-math:
    sysdeps/ieee754/flt-32/e_coshf.c
    # src/binary32/tgamma/tgammaf.c, revision 8ea8ea35
    sysdeps/ieee754/flt-32/e_gammaf_r.c

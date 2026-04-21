@@ -1,4 +1,4 @@
-From 48b0314376098b035e4679e2b70228f66ebd1927 Mon Sep 17 00:00:00 2001
+From 19dc94574820c43113240e485f461bb42b4e86dd Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 15 Nov 2025 22:42:02 +0100
 Subject: [PATCH 37/43] Replay "Revert __HAVE_64B_ATOMICS configure check" also

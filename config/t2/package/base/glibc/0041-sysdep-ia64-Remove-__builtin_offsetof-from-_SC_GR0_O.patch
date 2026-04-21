@@ -1,4 +1,4 @@
-From b1eb49331bddd50732873164c2a33ca996a76389 Mon Sep 17 00:00:00 2001
+From e412cee780053095a09a0cb43ff68e6863c9a4bc Mon Sep 17 00:00:00 2001
 From: Tomas Glozar <tglozar@gmail.com>
 Date: Sat, 21 Mar 2026 15:18:03 +0100
 Subject: [PATCH 41/43] sysdep/ia64: Remove __builtin_offsetof from

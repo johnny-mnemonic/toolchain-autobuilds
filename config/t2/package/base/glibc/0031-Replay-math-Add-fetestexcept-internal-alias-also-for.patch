@@ -1,4 +1,4 @@
-From 738e0f39012f15e0001191c3fa21703c1a00c158 Mon Sep 17 00:00:00 2001
+From e74e778fcdf238565b874562431ca656d607fae3 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Mon, 15 Sep 2025 23:56:14 +0200
 Subject: [PATCH 31/43] Replay "math: Add fetestexcept internal alias" also for

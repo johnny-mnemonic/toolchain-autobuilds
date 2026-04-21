@@ -1,4 +1,4 @@
-From c2ccf6e3c8a163b3555d333deb2075bd74011f44 Mon Sep 17 00:00:00 2001
+From 7ed66fa9d8d24fbae4eb28630ed2bcb8675fcc92 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 21 Mar 2026 11:40:56 +0100
 Subject: [PATCH 40/43] Revert "math: Fix spurious overflow and missing errno

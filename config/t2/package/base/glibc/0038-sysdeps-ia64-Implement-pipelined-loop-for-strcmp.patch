@@ -1,4 +1,4 @@
-From b9b9273db4826dee605d1867a7a2239ab8831f04 Mon Sep 17 00:00:00 2001
+From 7ae677a5abde657e5c67b4662143437bf34d0c7e Mon Sep 17 00:00:00 2001
 From: Tomas Glozar <tglozar@gmail.com>
 Date: Tue, 10 Mar 2026 21:19:49 +0100
 Subject: [PATCH 38/43] sysdeps/ia64: Implement pipelined loop for strcmp
