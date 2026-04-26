@@ -1,7 +1,7 @@
 From 1f896f79118019283a416a85e52c64a2ccda1496 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sun, 12 Jan 2025 21:04:24 +0100
-Subject: [PATCH 23/43] Replay "Add missing include guards to <dl-tls.h>" also
+Subject: [PATCH 23/44] Replay "Add missing include guards to <dl-tls.h>" also
  for ia64
 
 See 4a9a8a50981e2a3e0a04ef4c7ad7c26807c18161 for reference.

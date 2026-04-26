@@ -1,7 +1,7 @@
 From 32a2e8d42e09e9bdb3c555e8a56051c751a30879 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Mon, 30 Mar 2026 11:41:55 +0200
-Subject: [PATCH 42/43] Revert "math: Fix lgammaf regression on i686"
+Subject: [PATCH 42/44] Revert "math: Fix lgammaf regression on i686"
 
 The reverted commit touched a file (`sysdeps/ieee754/flt-32/e_lgammaf_r.c`)
 already modified by three other reverted commits:

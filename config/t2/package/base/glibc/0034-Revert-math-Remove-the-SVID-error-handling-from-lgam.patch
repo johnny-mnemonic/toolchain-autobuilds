@@ -1,7 +1,7 @@
 From 731d960eb04626285011dd931ae4bbab52384c63 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Mon, 10 Nov 2025 21:36:17 +0100
-Subject: [PATCH 34/43] Revert "math: Remove the SVID error handling from
+Subject: [PATCH 34/44] Revert "math: Remove the SVID error handling from
  lgammaf/lgammaf_r"
 
 This reverts commit de0e623434fcce907a5be8cc386c95d6b07ba408.

@@ -1,7 +1,7 @@
 From 7ed66fa9d8d24fbae4eb28630ed2bcb8675fcc92 Mon Sep 17 00:00:00 2001
 From: Johnny Mnemonic <jm@machine-hall.org>
 Date: Sat, 21 Mar 2026 11:40:56 +0100
-Subject: [PATCH 40/43] Revert "math: Fix spurious overflow and missing errno
+Subject: [PATCH 40/44] Revert "math: Fix spurious overflow and missing errno
  for lgammaf"
 
 The reverted commit touched a file (`sysdeps/ieee754/flt-32/e_lgammaf_r.c`)
